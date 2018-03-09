@@ -6,10 +6,12 @@
     <author email="developer@apicloud.com" href="http://www.apicloud.com">
         Developer
     </author>
-    <content src="index.html" />
+    <content src="html/cheng/shouhuan.html" />
     <access origin="*" />
-    <preference name="pageBounce" value="false"/>
+    <preference name="pageBounce" value="false"/><feature name="smsVerify">  <param name="android_app_key" value="247ea956c3bbe"/>  <param name="android_app_secret" value="7f651c350bf35035a2a72aabbc0844a3"/>  <param name="ios_app_key" value="247ea956c3bbe"/>  <param name="ios_app_secret" value="7f651c350bf35035a2a72aabbc0844a3"/></feature>
 	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+  <preference name="backgroundMode" value="bluetooth-central"/>
+
 	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
 	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
 	<preference name="hScrollBarEnabled" value="true"/>

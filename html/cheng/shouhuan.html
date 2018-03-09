@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cheng.css" />
+
+	<style>
+  body{
+    background: url(../../image/bg3.png);
+    width: 100%;
+    height: 568px;
+  }
+	</style>
+</head>
+<body>
+  <!-- 切换成员 -->
+  <div class="bodywrap">
+
+    <div class="lian">
+      <div class="zuobar"></div>
+      <span class='bartitle'>千选 QX-B37</span>
+      <div class="youbar"></div>
+    </div>
+    <img class='biaopan' src="../../image/biaopan2_1.png" alt="">
+  <p class='sh-bushu'>当前步数</p>
+  <p class='sh-bushuNum'>{{xixi}}</p>
+  <p class='sh-bushuPoint'>合格</p>
+  <p class='sh-kaul'>目标卡路里</p>
+  <p class='sh-kaulnum'>{{kalnum}}千卡</p>
+  <div class="point">
+    <span></span>
+    <span class='span1'></span>
+    <span></span>
+  </div>
+  <div class="users">
+      <img class='qiehuan' src="../../image/qiehuan.png" alt="">
+      <span class='qiehuan-title'>切换成员</span>
+      <div class="bigwrap"></div>
+      <a href="newuser.html" class="adduser">
+        <img src="../../image/add.png" alt="">
+        <span>添加新成员</span>
+      </a>
+  </div>
+  <div class="head"  style='background:#2F3747;'>
+    <a  class="user">
+      <img src="../../image/user.png" alt="">
+    </a>
+    <p class='head-title'>KIMMON</p>
+    <a  class="cheng">
+      <img src="../../image/cheng.png" alt="">
+    </a>
+  </div>
+
+  <div class="bottom">
+    <div class="change">
+        <img src="../../image/jiance.png" alt="">
+        <p>检测</p>
+    </div>
+    <div class="change">
+        <img class='sc' src="../../image/shangcheng.png" alt="">
+        <p>商城</p>
+    </div>
+    <div class="change">
+        <img src="../../image/xitong.png" alt="">
+        <p>系统</p>
+    </div>
+    <div class="change">
+        <img src="../../image/hudong.png" alt="">
+        <p>互动</p>
+    </div>
+    <div class="change">
+        <img class='wo' src="../../image/wo.png" alt="">
+        <p>我</p>
+    </div>
+  </div>
+
+
+  </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/flexible_css.js"></script>
+<script type="text/javascript" src="../../script/flexible.js"></script>
+<script type="text/javascript" src="../../script/c.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+
+
+<script type="text/javascript">
+var app = new Vue({
+  el:'.bodywrap',
+  data:{
+    bushunum:"1233",
+    kalnum:123
+  },
+  computed:{
+    xixi:function(){
+      var newstr = '';
+      if(this.bushunum.length>3){
+        console.log(1);
+        for(var i=0;i<this.bushunum.length;i++){
+          if(i==this.bushunum.length-3){
+            newstr+=','
+          }
+          newstr = newstr+this.bushunum[i];
+        }
+      }
+      return newstr;
+    }
+  }
+})
+var open = 0;
+// 打开
+ccc('.user').onclick = function(){
+  console.log('open')
+  setTimeout(function(){
+    open=1;
+  })
+  ccc('.users').style.left = '0px';
+}
+
+// 关闭
+ccc('.bodywrap').onclick = function(event){
+  // console.log(event)
+    event = event || window.event;
+    var target = event.target || event.srcElement;
+    if(open>0){
+      if(target != ccc('.users')&&target != ccc('.qiehuan')&&target != ccc('.qiehuan-title')){
+        console.log('close')
+        open=0;
+          ccc('.users').style.left = '-6.4rem';
+      }
+    }
+
+}
+
+// 读取本地缓存用户并且渲染
+function userData(){
+  if(!$api.getStorage('user')) return;
+    var userdata = $api.getStorage('user');
+var userhtml='';
+    for(var key in userdata){
+      console.log(key)
+      userhtml +=`<div class="userwrap">
+          <div class="touxiang">${userdata[key].nicename[0]}</div>
+          <p>${userdata[key].nicename}</p>
+      </div>`
+    }
+    ccc('.bigwrap').innerHTML = userhtml;
+}
+// userData();
+console.log($api.getStorage('user'))
+      apiready = function(){
+        // 计算body高度
+        console.log(JSON.stringify($api.getStorage('user')))
+          setTimeout(function(){
+            ccc('.users').style.opacity = 1;
+          },500)
+          document.querySelector('body').style.height = api.winHeight-1+'px';
+          userData();
+
+
+    };
+</script>
+</html>

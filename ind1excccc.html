@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+    html,body{
+        height: 100%;
+    }
+    #wrap{
+        height: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-flex-flow: column;
+    }
+    #header{
+        text-align: center;
+		background-color: #81a9c3;
+		color: #fff;
+        width: 100%;
+    }
+    #header h1{
+        font-size: 20px;
+		height: 44px;
+		line-height: 44px;
+		margin: 0em;
+		color: #fff;
+    }
+    #main{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+    }
+    #footer{
+        height: 30px;
+		line-height: 30px;
+        background-color: #81a9c3;
+        width: 100%;
+        text-align: center;
+    }
+    #footer h5{
+        color: white;
+    }
+    .con{
+		font-size: 28px;
+		text-align: center;
+	}
+  button{
+    width: 100%;
+    height: 100px;
+  }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>APICloud</h1>
+        </div>
+        <button type="button" name="button">按我</button>
+
+        <div id="activity_result">
+
+        </div>
+        <div id="footer">
+            <h5>Copyright &copy;<span id="year"></span> </h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+  var user_H = 165;
+  var user_sex = 0;
+  var user_age = 20;
+  var user_W = 0;
+  var user_R =0;
+  apiready = function () {
+    var ble = api.require('ble');
+    var uz = api.require('moduleDemo');
+
+        // return;
+
+    var uuid = '';
+    var uup = '';
+    ble.initManager(function(ret) {
+    if (ret.state == "poweredOn") {
+        setInterval(function() {
+          // ble.stopScan();
+          ble.scan(function(ret) {
+              if (ret.status) {
+                ble.getPeripheral(function(ret) {
+                  // console.log(JSON.stringify(ret))
+                  // return;
+                    if (ret) {
+                       var p= ret.peripherals;
+                       if(p){
+                         for(var i=0;i<p.length;i++){
+                           if(p[i].name=='ADV'){
+                             uuid=p[i].uuid;
+                             manufacturerData = p[i].manufacturerData;
+                             uup = p[i];
+                             console.log(manufacturerData)
+                             // $api.setStorage('keshi', '12312312');
+                             if(!$api.getStorage('jihuostate')){
+                                var param = {};
+                                param.appParam = uuid;
+                                function resultCallback(ret, err) {
+                                     if(ret.macresult=='已经在激活状态！'){
+                                       $api.setStorage('jihuostate', '2');
+                                     }else if(ret.macresult=='激活成功！'){
+                                       $api.setStorage('jihuostate', '1');
+                                     }
+                                 }
+                                 uz.mactest(param, resultCallback);
+                             }
+                             var a = manufacturerData.slice(manufacturerData.indexOf("ca")).slice(0,30);
+                             console.log(a)
+                             var newarr =[];
+		                         for(var i=0;i<a.split('').length;i=i+2){
+			                          newarr.push(a[i]+''+a[i+1])
+		                         }
+                             var jinkg = parseInt(newarr[8],16).toString(2);
+                             user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
+                             user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]));
+                             console.log(jinkg);
+                             console.log(user_W);
+                             console.log(user_R);
+                            //  setTimeout(bodyData,2000)
+                             if(manufacturerData){
+                               ble.stopScan();
+                               manufacturerData='';
+                             }
+                           }
+                         }
+                       }
+
+                    }
+                  });
+                }
+            });
+            // $api.setStorage('keshi', '12312312');
+            console.log($api.getStorage('jihuostate'))
+            console.log('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'+new Date+'----'+uuid+'---------')
+        },2000)
+    }
+});
+  }
+  function f16to2(num){
+  		var a = parseInt(num,16).toString(2);
+  		var b = '00000000';
+  		return b.slice(0,(8-a.length))+a
+  	}
+    function f2to10(num1,num2,jinkg){
+  		var a = num1+num2;
+  		var b = parseInt(a,2).toString(10);
+      if(!jinkg){
+        return b;
+      }
+  		var next = b[b.length-2]+b[b.length-1];
+  		var first = b.slice(0,length-2);
+  		if(jinkg<1000){
+  			var ss=+(first*1000+next*10)/1000;
+  		}else{
+  			var ss=+(first*500+next[0]*50)/1000;
+  		}
+  		return ss;
+  	}
+  function bodyData(){
+    var uz = api.require('moduleDemo');
+    if(!user_R){
+      user_R = 1;
+    }
+    var param1 = {
+        height: user_H.toString(),
+        sex: user_sex.toString(),
+        age: user_age.toString(),
+        weight: user_W.toString(),
+        r: user_R.toString()
+    };
+    var resultCallback1 = function(ret, err) {
+        document.getElementById("activity_result").innerHTML = JSON.stringify(ret);
+    }
+    console.log(user_H.toString());
+    console.log(user_sex.toString());
+    console.log(user_age.toString());
+    console.log(user_W.toString());
+    console.log(user_R.toString());
+    console.log('================')
+
+    uz.datainfo(param1, resultCallback1);
+  }
+  document.querySelector('button').onclick =bodyData;
+</script>
+
+</html>

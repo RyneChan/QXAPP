@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/user.css" />
+
+	<style>
+  body{
+    background: url(../../image/bg2.png);
+    width: 100%;
+    position: relative;
+    height: 568px;
+  }
+	</style>
+</head>
+<body>
+  <!-- 分享框 -->
+  <div class="rep-share">
+      <div class="rep-wechat1">
+        <img src="../../image/wechat-1.png" alt="">
+        <p>微信</p>
+      </div>
+      <div class="rep-wechat1">
+        <img src="../../image/wechat-2.png" alt="">
+        <p>朋友圈</p>
+      </div>
+  <p class='quxiao'>取消</p>
+  </div>
+  <!-- 遮罩 -->
+  <div class="rep-bigmask"></div>
+  <a  class="back" href="#">
+    <img class='rep-back' src="../../image/left.png" alt="">
+  </a>
+  <span class='rep-title'>KIMMON-测量报告</span>
+  <a  class="back1" href="#">
+    <img class='rep-back1' src="../../image/share.png" alt="">
+  </a>
+  <p class='rep-fenshu'>9.0</p>
+  <p class='rep-tifenshu'>体形得分</p>
+  <p class='rep-ceTime'>测量时间：2018-02-01</p>
+  <div class="rep-cenum">
+      <div class="rep-cenum1 rep-cenum3">
+          <img src="../../image/cheng-1.png" alt="">
+          <span class='span1'>体重</span>
+          <span class='span2'>60.0KG</span>
+          <span class='span3'>标准</span>
+      </div>
+      <div class="rep-cenum2 rep-cenum4">
+          <img src="../../image/bmi-1.png" alt="">
+          <span class='span1'>BMI</span>
+          <span class='span2'>23.33</span>
+          <span class='span3'>标准</span>
+      </div>
+  </div>
+  <div class="bodywrap">
+
+
+  <div class="rep-mask">
+    <div class="cha">
+      <img src="../../image/cha.png" alt="">
+    </div>
+    <img class='rep-mask-cheng' src="../../image/cheng-2.png" alt="">
+    <p class='rep-mask-kg'>60.0KG</p>
+    <p class='rep-mask-p'>体重在合理的范围内。注意保持，生活作息规律，注意
+摄入充足的水分，增强代谢。饭后记走一走是保持良好
+身材的秘方。</p>
+<div class="rep-shuju">
+    <img class='rep-color' src="../../image/color.png" alt="">
+    <span class='rep-ps'>偏瘦</span>
+    <span class='rep-bz'>标准</span>
+    <span class='rep-pp'>偏胖</span>
+    <span class='rep-fp'>肥胖</span>
+    <span class='rep-point'></span>
+    <span class='rep-shuju-kg'>60.0</span>
+    <span class='rep591'>59.1</span>
+    <span class='rep750'>75.0</span>
+    <span class='rep850'>85.0</span>
+    <div class="rep-xuxian"></div>
+</div>
+<div class="rep-qiehuan">
+  <span class='span1'></span>
+  <span class='span2'></span>
+</div>
+  </div>
+  <!-- bmi -->
+  <div class="rep-mask rep-mask1">
+    <div class="cha cha1">
+      <img src="../../image/cha.png" alt="">
+    </div>
+    <img class='rep-mask-bmi' src="../../image/bmi-2.png" alt="">
+    <p class='rep-mask-kg'>22.33</p>
+    <p class='rep-mask-p'>123体重在合理的范围内。注意保持，生活作息规律，注意
+摄入充足的水分，增强代谢。饭后记走一走是保持良好
+身材的秘方。</p>
+<div class="rep-shuju">
+    <img class='rep-color' src="../../image/color.png" alt="">
+    <span class='rep-ps'>偏瘦</span>
+    <span class='rep-bz'>标准</span>
+    <span class='rep-pp'>偏胖</span>
+    <span class='rep-fp'>肥胖</span>
+    <span class='rep-point'></span>
+    <span class='rep-shuju-kg'>22.33</span>
+    <span class='rep591'>18.5</span>
+    <span class='rep750'>24.0</span>
+    <span class='rep850'>28.0</span>
+    <div class="rep-xuxian"></div>
+</div>
+<div class="rep-qiehuan">
+  <span class='span2'></span>
+  <span class='span1'></span>
+</div>
+  </div>
+  </div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/flexible_css.js"></script>
+<script type="text/javascript" src="../../script/flexible.js"></script>
+<script type="text/javascript" src="../../script/c.js"></script>
+
+
+<script type="text/javascript">
+// 记录打开了第几页
+      var opnepage=0;
+      ccc('.cha').onclick = function(){
+        opnepage=0;
+        ccc('.rep-mask').style.display = 'none';
+      }
+      ccc('.cha1').onclick = function(){
+        opnepage=0;
+
+        ccc('.rep-mask1').style.display = 'none';
+      }
+      ccc('.rep-cenum3').onclick = function(){
+        opnepage=1;
+
+        ccc('.rep-mask').style.display = 'block';
+      }
+      ccc('.rep-cenum4').onclick = function(){
+        opnepage=2;
+
+        ccc('.rep-mask1').style.display = 'block';
+      }
+
+
+      // 移动检测
+      var startX,moveX,endX;
+      ccc('.bodywrap').addEventListener("touchstart", function(e) {
+          console.log(e.touches[0].pageX, e.touches[0].pageY);
+          startX = e.touches[0].pageX;
+          endX=0;
+      });
+      ccc('.bodywrap').addEventListener("touchmove", function(e) {
+          if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+          moveX = e.touches[0].pageX;
+          endX=1;
+      });
+      ccc('.bodywrap').addEventListener("touchend", function(e) {
+        console.log('开始：'+startX);
+        console.log('结束：'+moveX);
+        if(!endX){
+          moveX=startX;
+        }
+        if(moveX-startX>20){
+          console.log('向右滑动')
+          if(opnepage==2){
+            opnepage=1;
+            endX=0;
+            ccc('.rep-mask1').style.display = 'none';
+            ccc('.rep-mask').style.display = 'block';
+          }
+        }else if(moveX-startX<-20){
+          console.log('向左滑动')
+          if(opnepage==1){
+            opnepage=2;
+            endX=0;
+            ccc('.rep-mask').style.display = 'none';
+            ccc('.rep-mask1').style.display = 'block';
+          }
+        }
+
+      });
+      ccc('.back').onclick = function(){
+        window.location.href='cheng.html'
+      }
+      ccc('.rep-back').onclick = function(){
+        window.location.href='cheng.html'
+      }
+      ccc('.back1').onclick = function(){
+        console.log(1);
+        ccc('.rep-share').style.display = 'flex';
+        ccc('.rep-bigmask').style.display = 'block';
+
+      }
+      ccc('.rep-back1').onclick = function(){
+        console.log(1);
+
+        ccc('.rep-share').style.display = 'flex';
+        ccc('.rep-bigmask').style.display = 'block';
+
+      }
+      ccc('.quxiao').onclick = function() {
+        ccc('.rep-share').style.display = 'none';
+        ccc('.rep-bigmask').style.display = 'none';
+      }
+      apiready = function(){
+        // 计算body高度
+          document.querySelector('body').style.height = api.winHeight-1+'px';
+
+
+    };
+</script>
+</html>

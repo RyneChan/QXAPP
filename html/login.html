@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/user.css" />
+
+	<style>
+  body{
+    background: url(../image/background.png);
+    width: 100%;
+    height: 1472px;
+  }
+
+	</style>
+</head>
+<body>
+  <img class='logo' src="../image/logo.png" alt="">
+  <div class="userinput">
+    <div class="phone">
+        <img src="../image/userIco.png" alt="">
+        <input type="text" name="" value="" placeholder="手机号" maxlength="11">
+    </div>
+    <div class="phone password">
+        <img src="../image/pwIco.png" alt="">
+        <input type="password" name="" value="" placeholder="密码">
+    </div>
+    <div class="phone submit">立即登录</div>
+    <a href="forgetpw.html" class="forgetpw">忘记密码？</a>
+  </div>
+
+  <div class="orbar orbar1">
+  </div>
+  <p class='orbar3'>第三方账号登录</p>
+  <div class="orbar orbar2">
+  </div>
+
+  <div class="disanfang">
+    <img src="../image/weibo.png" alt="">
+    <img src="../image/wechat.png" alt="">
+    <img src="../image/qq.png" alt="">
+  </div>
+  <p  class='res'>还没有账号？ <a href="res.html">立即注册</a> </p>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/flexible_css.js"></script>
+<script type="text/javascript" src="../script/flexible.js"></script>
+
+<script type="text/javascript">
+      apiready = function(){
+    document.querySelector('body').style.height = api.winHeight+'px';
+    var dialogBox = api.require('dialogBox');
+    document.querySelector('.submit').onclick = function(){
+      alert('test')
+    }
+    };
+</script>
+</html>

@@ -1,0 +1,271 @@
+.head{
+	position: relative;
+	width: 100%;
+	height: 1.573333rem;
+	background: #2F3747;
+	z-index: 5;
+}
+.head-title{
+	width: 100%;
+	text-align: center;
+	line-height: 2rem;
+	font-size: 0.48rem;
+	color:white;
+}
+.user{
+	width: 1.4rem;
+	height: 1.4rem;
+	position: absolute;
+}
+.user img{
+	width: 0.533333rem;
+	height: 0.533333rem;
+	margin-left: 0.586667rem;
+	margin-top: 0.8rem;
+
+}
+.cheng{
+	width: 1.4rem;
+	height: 1.4rem;
+	position: absolute;
+	/*background: red;*/
+	right: 0;
+	top:0;
+}
+.cheng img{
+	width: 0.533333rem;
+	height: 0.533333rem;
+	margin-right: 0.586667rem;
+	margin-top: 0.8rem;
+}
+.biaopan{
+	width: 7.066667rem;
+	height: 6.613333rem;
+	left: 1.4833333rem;
+	top:2.8rem;
+	position: absolute;
+}
+.zuobar{
+	border-bottom: 1px solid white;
+	width: 1.5rem;
+	position: absolute;
+	top:2rem;
+	left: 2rem;
+}
+.youbar{
+	border-bottom: 1px solid white;
+	width: 1.5rem;
+	position: absolute;
+	top:2rem;
+	right: 2rem;
+}
+.bartitle{
+	font-size: 0.346667rem;
+	width: 100%;
+	text-align: center;
+	color:white;
+	position: absolute;
+	top:1.8rem;
+}
+.tizhong{
+	z-index: 99;
+	/*background: red;*/
+	position: absolute;
+	top:5.6rem;
+	color:white;
+	width: 100%;
+	text-align: center;
+	font-size: 1.146667rem;
+}
+.tizhong2{
+}
+.defen{
+	position: absolute;
+	top:7.8rem;
+	color:white;
+	width: 100%;
+	text-align: center;
+	font-size: 0.746667rem;
+}
+.point{
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top:10rem;
+}
+.point span{
+	width: 0.213333rem;
+	height: 0.213333rem;
+	border-radius: 50%;
+	background:white;
+	margin-left:0.1rem;
+	margin-right:0.1rem;
+	opacity: .5;
+}
+.point .span1{
+	opacity: 1;
+}
+.quzhi{
+	position: absolute;
+	width: 1.5rem;
+}
+.quzhi img{
+	width: 1.2rem;
+	height: 1.2rem;
+	margin-left: 0.15rem;
+
+}
+.quzhi p{
+	font-size: 0.346667rem;
+	width: 100%;
+	line-height: 0.5rem;
+	text-align: center;
+	color:white;
+}
+.quzhi1{
+	left: 2.313333rem;
+	top:11rem;
+}
+.bmi{
+	right: 2.313333rem;
+	top:11rem;
+}
+.tishui{
+	left: 2.313333rem;
+	top:13.5rem;
+}
+.zhifang{
+	right: 2.313333rem;
+	top:13.5rem;
+}
+.bottom{
+	display: flex;
+	 flex-direction: row;
+	position:absolute;
+	 justify-content:space-around;
+	bottom: 0px;
+	background: #2F3747;
+	width: 100%;
+	height: 1.306667rem;
+}
+.change{
+	width: 0.866667rem;
+	text-align: center;
+}
+.change img{
+	margin-top:0.173333rem;
+	width: 0.4rem;
+	height: 0.4rem;
+}
+.change .sc{
+	width: 0.426667rem;
+}
+.change .wo{
+	width: 0.326667rem;
+	height: 0.426667rem;
+}
+.change p{
+	font-size: 0.32rem;
+	color:white;
+	line-height: 0.7rem;
+}
+.users{
+	opacity: 0;
+	width: 6.4rem;
+	height: 100%;
+	background: #1B293F;
+	z-index: 999;
+	position: absolute;
+	top:0;
+	left: -6.4rem;
+	transition: left 350ms;
+}
+.users .qiehuan{
+	margin-left: 0.8rem;
+	margin-top: 0.8rem;
+	width: 0.4rem;
+	height: 0.346667rem;
+}
+.qiehuan-title{
+	font-size: 0.48rem;
+	color: white;
+	margin-left: 0.266667rem;
+}
+.userwrap{
+	width: 4.506667rem;
+	height: 2.4rem;
+	/*background: red;*/
+	position: relative;
+	margin: 0 auto;
+	border-bottom: 1px solid rgb(125,133,146);
+}
+.touxiang{
+	width: 1.6rem;
+	height: 1.6rem;
+	background: white;
+	border-radius: 50%;
+	position: absolute;
+	top:0.4rem;
+	text-align: center;
+	font-size: 1rem;
+	line-height: 1.6rem;
+	/*margin-top:0.4rem;*/
+}
+.userwrap p{
+text-align: center;
+line-height: 2.4rem;
+padding-left: 1.6rem;
+color: white;
+font-size: 0.373333rem;
+}
+.adduser{
+	margin-top:0.8rem;
+	display: flex;
+	justify-content:center;
+}
+.adduser img{
+	width: 0.426667rem;
+	height: 0.426667rem;
+}
+.adduser span{
+	font-size: 0.373333rem;
+	color:white;
+	margin-left: 0.333333rem;
+}
+.sh-bushu{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color:white;
+	top:4.9rem;
+}
+.sh-bushuNum{
+	position: absolute;
+	width: 100%;
+	font-size: 1.146667rem;
+	text-align: center;
+	color:white;
+	top:5.4rem;
+}
+.sh-bushuPoint{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color:white;
+	top:6.7rem;
+}
+.sh-kaul{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color:white;
+	top:7.5rem;
+}
+.sh-kaulnum{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	color:white;
+	top:8.1rem;
+	font-size: 0.48rem;
+}

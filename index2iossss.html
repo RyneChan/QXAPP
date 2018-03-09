@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+    html,body{
+        height: 100%;
+    }
+    #wrap{
+        height: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-flex-flow: column;
+    }
+    #header{
+        text-align: center;
+		background-color: #81a9c3;
+		color: #fff;
+        width: 100%;
+    }
+    #header h1{
+        font-size: 20px;
+		height: 44px;
+		line-height: 44px;
+		margin: 0em;
+		color: #fff;
+    }
+    #main{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+    }
+    #footer{
+        height: 30px;
+		line-height: 30px;
+        background-color: #81a9c3;
+        width: 100%;
+        text-align: center;
+    }
+    #footer h5{
+        color: white;
+    }
+    .con{
+		font-size: 28px;
+		text-align: center;
+	}
+  .xixi{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    /*background: ;*/
+  }
+  .headrate{
+    font-size: 100px;
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top:100px;
+  }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>CCCCC心率</h1>
+        </div>
+        <div id="main">
+            <!-- <button class='xixi' type="button" name="button">xixixi</button> -->
+            <p class='headrate'>检测写入</p>
+        </div>
+
+        <div id="footer">
+            <h5>Copyright &copy;<span id="year"></span> </h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src='./script/av-min.js'></script>
+<script type="text/javascript" src="./script/api.js"></script>
+
+<script type="text/javascript">
+
+
+var offf = 0;
+// var ble = api.require('ble');
+var uuid,serviceUUID,characteristicUUID;
+  apiready = astart;//初始
+
+  document.querySelector('.headrate').onclick = function(){
+    readTheRet('01 52 05 05 05 05 05')
+  }
+
+
+function astart(){
+  var simpleBle = api.require("simpleBle");
+  simpleBle.close();
+  setTimeout(function(){
+    simpleBle.open();
+
+  },1000)
+  var offtime = setInterval(function(){
+    simpleBle.isOpen(function(ret) {
+      if(ret.isOpen){
+        clearInterval(offtime);
+        start();
+      }
+    })
+  },1000)
+}
+
+
+// start字段，第一步检测是否已经启动，提示已启动。第二部检测是否打开蓝牙，如果打开了，就会提示开始扫描。第三步根据蓝牙名称寻找设备。寻找到设备之后就捕获设备的uuid，然后显示已连接。
+// 连接完成之后寻找他的服务uuid，然后提取服务的uuid。
+// 提取到服务的uuid，就开始寻找characteristics uuid。寻找到之后，就保存下来。
+// 日后可以保存在缓存中。不用每次都调用了。但是好像要连接才行
+
+  function start() {
+    var obj = api.require('btmodule');
+    obj.ScanBT();
+    return;
+    console.log('已启动')
+    var ble = api.require('ble');
+    ble.initManager(function(ret) {
+      if (ret.state == "poweredOn") {
+              ble.scan({
+              }, function(ret) {
+              if (ret.status) {
+                  console.log('开始扫描');
+              }
+            });
+            var timer = setInterval(function(){
+              ble.getPeripheral(function(ret) {
+                  if (ret) {
+                      console.log(JSON.stringify(ret))
+                      var p= ret.peripherals;
+                      if(p){
+                        for(var i=0;i<p.length;i++){
+                          if(p[i].name=='Jstyle heart++'){ //MI Band 2
+                            uuid=p[i].uuid;
+                            uup = p[i];
+                            if(uuid){
+                              console.log('已捕获uuid：'+uuid)
+                              clearInterval(timer);
+                              ble.connect({
+                                  peripheralUUID: uuid
+                              }, function(ret, err) {
+                                  if (ret.status) {
+                                      console.log('已连接')
+                                      ble.discoverService({
+                                          peripheralUUID: uuid
+                                      }, function(ret) {
+                                          if (ret) {
+                                              console.log(JSON.stringify(ret))
+                                              serviceUUID = ret.services[2];
+                                              console.log(serviceUUID)
+                                              ble.discoverCharacteristics({
+                                                  serviceUUID:serviceUUID,
+                                                  peripheralUUID:uuid
+                                              }, function(ret) {
+                                                    if (ret) {
+                                                      console.log('======================================discoverCharacteristics===========================')
+                                                        console.log('characteristics：'+JSON.stringify(ret)) //characteristics uuid
+                                                        console.log(serviceUUID) //Service UUID
+                                                        console.log(uuid) //设备唯一特征
+                                                        // return
+                                                        var str = '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00            ===================位置检测用';
+                                                    }
+                                              });
+                                          }
+                                      });
+                                  } else {
+                                      console.log('连接错误：'+err.code)
+                                  }
+                              });
+                            }
+                          }
+                        }
+                      }
+                  }
+              });
+            },1000)
+      }else{
+
+        console.log('蓝牙尚未启动')
+      }
+    });
+  }
+
+  function readTheRet(str,type){
+    var obj = api.require('btmodule');
+    var param={service:"0000fff0-0000-1000-8000-00805f9b34fb",charUUID:"0000fff6-0000-1000-8000-00805f9b34fb",data:"0152050505050500000000000000006C"};
+    obj.WriteBT(param);
+    return;
+    // console.log(1111);
+    var ble = api.require('ble');
+
+    // 特殊处理
+    if(str=='now'){
+      var nowtime = new Date;
+      var nowsettime = '01 '+nowtime.getFullYear().toString()[2]+nowtime.getFullYear().toString()[3]+' '+completionZero((nowtime.getMonth()+1).toString())+' '+completionZero(nowtime.getDate().toString())+' '+completionZero(nowtime.getHours().toString())+' '+completionZero(nowtime.getMinutes().toString())+' '+completionZero(nowtime.getSeconds().toString());
+      readTheRet(nowsettime);
+      return;
+    }
+    // 计算crc
+    crc = crcSet(str);
+    var zero = '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00';
+    str = str+zero.slice(str.length);
+    var readArr = ['41','42','43','07','4b','4f','13','22','24','26','21','38','3e','48','2b','2d','2f','6d','20'];
+    var characteristicUUID = readArr.indexOf(str[0]+str[1])>-1?'FFF7':'FFF6';
+      ble.setNotify({
+      peripheralUUID: uuid,
+      serviceUUID: serviceUUID,
+      // characteristicUUID:'FFF7'
+      characteristicUUID:'0000fff7-0000-1000-8000-00805f9b34fb'
+
+      }, function(ret) {
+        console.error('捕获返回：' + JSON.stringify(ret))
+      // if (ret) {
+      //   if(type==0){
+      //     console.log('捕获数据：'+ret.characteristic.value)
+      //     console.log('心率'+ parseInt(retSplit(ret.characteristic.value).split(' ')[1],16).toString(10))
+      //     document.querySelector('.headrate').innerHTML = parseInt(retSplit(ret.characteristic.value).split(' ')[1],16).toString(10);
+      //   }
+      // console.error(JSON.stringify(ret))
+      // }
+      });
+      console.log(str+' '+crc)
+    ble.writeValueForCharacteristic({
+        peripheralUUID: uuid,
+        serviceUUID:  '0000FFF0-0000-1000-8000-00805F9B34FB',
+        // characteristicUUID: 'FFF6',
+        characteristicUUID: '0000FFF6-0000-1000-8000-00805F9B34FB',
+        // value:'41 00 00 00 00 00 00 00 00 00 00 00 00 00 00 41'
+
+        value:'0152050505050500000000000000006C'
+    }, function(ret) {
+        if (ret) {
+          console.error('设置返回：' +JSON.stringify(ret))
+        }
+    });
+    ble.discoverDescriptorsForCharacteristic({
+    peripheralUUID: uuid,
+    serviceUUID: '0000fff0-0000-1000-8000-00805f9b34fb',
+    characteristicUUID: '0000fff6-0000-1000-8000-00805f9b34fb'
+}, function(ret) {
+    if (ret) {
+        console.error('des返回：' +JSON.stringify(ret))
+    }
+});
+var ble = api.require('ble');
+ble.writeValueForDescriptor({
+    peripheralUUID: uuid,
+    serviceUUID: serviceUUID,
+    characteristicUUID: '0000fff6-0000-1000-8000-00805f9b34fb',
+    descriptorUUID: '00002902-0000-1000-8000-00805f9b34fb',
+    value:'01 52 05 05 05 05 05 00 00 00 00 00 00 00 00 6c'
+
+}, function(ret) {
+    if (ret) {
+      console.error('Descriptor返回：' +JSON.stringify(ret))
+
+    }
+});
+    ble.readValueForCharacteristic({
+        peripheralUUID: uuid,
+        serviceUUID:serviceUUID,
+        // characteristicUUID: 'FFF6',
+        characteristicUUID: '0000fff6-0000-1000-8000-00805f9b34fb'
+    }, function(ret) {
+        if (ret) {
+        console.error('read返回：' +JSON.stringify(ret))
+        }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // 返回的数值进行拆分
+  function retSplit(str){
+		var newstr = '';
+		str.split('').forEach(function(item,index){
+			newstr+=item;
+			if(index%2){
+				newstr+=' '
+			}
+		})
+		return newstr;
+	}
+  function completionZero(num) {
+    return num.length==1?'0'+num:num;
+  }
+  // 上传到云
+
+  function dao520(ble) {
+
+    var ble = api.require('ble');
+    // console.log(ble)
+    var cishu=0;
+    var timerdaoshu = setInterval(function() {
+      var settime = ['52 05 05 05 05 05','52 04 04 04 04 04','52 03 03 03 03 03','52 02 02 02 02 02','52 01 01 01 01 01','52 05 20 05 20 20',];
+      var str = '01 '+settime[cishu]+' 00 00 00 00 00 00 00 00';
+      var newar = str.split(' ');
+      var a=0;
+      newar.forEach(function(item,index) {
+          a+=parseInt(item,16);
+      })
+      var crc = completionZero(parseInt(+a.toString(2),2).toString(16));
+      ble.writeValueForCharacteristic({
+          peripheralUUID: uuid,
+          serviceUUID: serviceUUID,
+          characteristicUUID: "FFF6",
+          value: str+' '+crc
+      }, function(ret) {
+          if (ret) {
+          console.error(JSON.stringify(ret))
+          }
+      });
+      cishu++;
+      if(cishu==6){
+        offf=0;
+        clearInterval(timerdaoshu)
+      }
+    },1000)
+  }
+  // crc计算返回
+  function crcSet(str) {
+    var newar = str.split(' ');
+    var a=0;
+    newar.forEach(function(item,index) {
+        a+=parseInt(item,16);
+    })
+    return completionZero(parseInt(+a.toString(2),2).toString(16));
+  }
+</script>
+</html>

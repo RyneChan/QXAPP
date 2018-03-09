@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/cheng.css" />
+
+	<style>
+  body{
+    background: url(../../image/bg2.png);
+    width: 100%;
+    height: 568px;
+  }
+	</style>
+</head>
+<body>
+  <!-- 切换成员 -->
+  <div class="bodywrap">
+
+
+  <div class="users">
+      <img class='qiehuan' src="../../image/qiehuan.png" alt="">
+      <span class='qiehuan-title'>切换成员</span>
+      <div class="bigwrap"></div>
+      <a href="newuser.html" class="adduser">
+        <img src="../../image/add.png" alt="">
+        <span>添加新成员</span>
+      </a>
+  </div>
+  <div class="head"  style='background:#2F3747;'>
+    <a  class="user">
+      <img src="../../image/user.png" alt="">
+    </a>
+    <p class='head-title'>KIMMON</p>
+    <a  class="cheng">
+      <img src="../../image/cheng.png" alt="">
+    </a>
+  </div>
+
+  <div class="content">
+    <div class="lian">
+      <div class="zuobar"></div>
+      <span class='bartitle'>千选 QX-B37</span>
+      <div class="youbar"></div>
+    </div>
+    <p class='tizhong'><span class='tizhong2'>0.0</span></p>
+    <p class='defen'>0.0</p>
+    <div class="point">
+      <span class='span1'></span>
+      <span></span>
+      <span></span>
+    </div>
+    <img class='biaopan' src="../../image/biaopan.png" alt="">
+
+    <div class="quzhi quzhi1">
+      <img src="../../image/quzhi.png" alt="">
+      <p>去脂体重</p>
+      <p>43.0kg</p>
+    </div>
+    <div class="quzhi bmi">
+      <img src="../../image/bmi.png" alt="">
+      <p>BMI</p>
+      <p>18.21</p>
+    </div>
+    <div class="quzhi tishui">
+      <img src="../../image/tishui.png" alt="">
+      <p>体水分</p>
+      <p>18.8%</p>
+    </div>
+    <div class="quzhi zhifang">
+      <img src="../../image/zhifang.png" alt="">
+      <p>脂肪率</p>
+      <p>2.3%</p>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="change">
+        <img src="../../image/jiance.png" alt="">
+        <p>检测</p>
+    </div>
+    <div class="change">
+        <img class='sc' src="../../image/shangcheng.png" alt="">
+        <p>商城</p>
+    </div>
+    <div class="change">
+        <img src="../../image/xitong.png" alt="">
+        <p>系统</p>
+    </div>
+    <div class="change">
+        <img src="../../image/hudong.png" alt="">
+        <p>互动</p>
+    </div>
+    <div class="change">
+        <img class='wo' src="../../image/wo.png" alt="">
+        <p>我</p>
+    </div>
+  </div>
+
+
+  </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/flexible_css.js"></script>
+<script type="text/javascript" src="../../script/flexible.js"></script>
+<script type="text/javascript" src="../../script/c.js"></script>
+
+
+<script type="text/javascript">
+var open = 0;
+// 打开
+ccc('.user').onclick = function(){
+  console.log('open')
+  setTimeout(function(){
+    open=1;
+  })
+  ccc('.users').style.left = '0px';
+}
+// 移动检测
+// ccc('.bodywrap').addEventListener("touchstart", function(e) {
+//     console.log(e.touches[0].pageX, e.touches[0].pageY);
+// });
+// ccc('.bodywrap').addEventListener("touchmove", function(e) {
+//     if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+//     console.log(e.touches[0].pageX, e.touches[0].pageY);
+// });
+// ccc('.bodywrap').addEventListener("touchend", function(e) {});
+
+ccc('.tizhong2').onclick = function(){
+  window.location.href='chengRep.html';
+}
+
+// 关闭
+ccc('.bodywrap').onclick = function(event){
+  // console.log(event)
+    event = event || window.event;
+    var target = event.target || event.srcElement;
+    if(open>0){
+      if(target != ccc('.users')&&target != ccc('.qiehuan')&&target != ccc('.qiehuan-title')){
+        console.log('close')
+        open=0;
+          ccc('.users').style.left = '-6.4rem';
+      }
+    }
+
+}
+
+// 读取本地缓存用户并且渲染
+function userData(){
+  if(!$api.getStorage('user')) return;
+    var userdata = $api.getStorage('user');
+var userhtml='';
+    for(var key in userdata){
+      console.log(key)
+      userhtml +=`<div class="userwrap">
+          <div class="touxiang">${userdata[key].nicename[0]}</div>
+          <p>${userdata[key].nicename}</p>
+      </div>`
+    }
+    ccc('.bigwrap').innerHTML = userhtml;
+}
+// userData();
+console.log($api.getStorage('user'))
+      apiready = function(){
+        // 计算body高度
+        console.log(JSON.stringify($api.getStorage('user')))
+          setTimeout(function(){
+            ccc('.users').style.opacity = 1;
+          },500)
+          document.querySelector('body').style.height = api.winHeight-1+'px';
+          userData();
+
+
+    };
+</script>
+</html>
