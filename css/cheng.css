@@ -269,3 +269,55 @@ font-size: 0.373333rem;
 	top:8.1rem;
 	font-size: 0.48rem;
 }
+.sh-showdata{
+	display: flex;
+	justify-content:space-between;
+	width: 6.933333rem;
+	left: 1.533333rem;
+	position: absolute;
+	height: 2.453333rem;
+	bottom:3.8rem;
+}
+.sh-showdata .sh-qtbushu{
+	width: 1.333333rem;
+	height: 100%;
+}
+.sh-showdata .sh-qtbushu img{
+	width: 1.2rem;
+	height: 1.2rem;
+	margin-bottom: 0.1rem;
+	margin-left: 0.066667rem;
+}
+.sh-showdata .sh-qtbushu .span1{
+	width: 100%;
+	text-align: center;
+	font-size: 0.32rem;
+	margin-top:0.126667rem;
+	color:white;
+}
+.sh-yundata{
+	width: 7.466667rem;
+	height: 1.76rem;
+	border:1px solid #ccc;
+	position: absolute;
+	left: 1.266667rem;
+	bottom: 1.7rem;
+}
+.sh-yundata .sh-time{
+	color:white;
+	margin-left: 0.266667rem;
+	margin-top:0.333333rem;
+}
+.sh-yundata .sh-title{
+	color:white;
+	margin-left: 1.266667rem;
+	margin-top:0.333333rem;
+}
+.sh-yundata .sh-two{
+	color:white;
+	margin-top:0.333333rem;
+}
+.sh-yundata .sh-erc{
+		display: flex;
+	justify-content:space-around;
+}

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/user.css" />
+
+	<style>
+  body{
+    background: url(../../image/bg3.png);
+    width: 100%;
+    position: relative;
+    height: 568px;
+  }
+	</style>
+</head>
+<body>
+  <a  class="back" href="#">
+    <img class='rep-back' src="../../image/left.png" alt="">
+  </a>
+    <span class='rep-title'>活动时间表</span>
+    <div class="shData-app">
+        <div class="shData-list" v-for='item in sportList'>
+          <span class='sh-time' >{{item.firtime}}</span>
+          <span class='sh-title'>{{item.firsport}}</span>
+          <div class="sh-erc">
+            <span class='sh-two'>{{item.firbunum}}步</span>
+            <span class='sh-two'>{{item.firbukm}}公里</span>
+            <span class='sh-two'>{{item.firbumin}}分钟</span>
+            <span class='sh-two'>{{item.firbukal}}千卡</span>
+          </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/flexible_css.js"></script>
+<script type="text/javascript" src="../../script/flexible.js"></script>
+<script type="text/javascript" src="../../script/c.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+
+<script type="text/javascript">
+var app = new Vue({
+  el:'.shData-app',
+  data:{
+    sportList:[{
+      firtime:'8:00am - 9:00am',
+      firsport:'轻微运动',
+      firbunum:1333,
+      firbukm:1333,
+      firbumin:1333,
+      firbukal:1333
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'11:00am - 12:00am',
+      firsport:'轻微运动',
+      firbunum:1999,
+      firbukm:1999,
+      firbumin:1999,
+      firbukal:1999
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    },{
+      firtime:'9:00am - 10:00am',
+      firsport:'轻微运动',
+      firbunum:1222,
+      firbukm:1222,
+      firbumin:1222,
+      firbukal:1222
+    }]
+
+  }
+})
+apiready = function() {
+  // 计算body高度
+  document.querySelector('body').style.height = api.winHeight-1+'px';
+
+  console.log(12332)
+}
+ccc('.back').onclick = function(){
+  window.location.href='shouhuan.html';
+
+}
+ccc('.rep-back').onclick = function(){
+  window.location.href='shouhuan.html';
+}
+</script>
+</html>

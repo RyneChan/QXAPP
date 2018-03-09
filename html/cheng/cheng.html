@@ -164,6 +164,8 @@ var userhtml='';
 // userData();
 console.log($api.getStorage('user'))
       apiready = function(){
+        $api.setStorage('page',1);
+
         // 计算body高度
         console.log(JSON.stringify($api.getStorage('user')))
           setTimeout(function(){
@@ -174,5 +176,36 @@ console.log($api.getStorage('user'))
 
 
     };
+
+    // 移动检测
+    var startX,moveX,endX;
+    ccc('.bodywrap').addEventListener("touchstart", function(e) {
+        console.log(e.touches[0].pageX, e.touches[0].pageY);
+        startX = e.touches[0].pageX;
+        endX=0;
+    });
+    ccc('.bodywrap').addEventListener("touchmove", function(e) {
+        if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+        moveX = e.touches[0].pageX;
+        endX=1;
+    });
+    ccc('.bodywrap').addEventListener("touchend", function(e) {
+      console.log('开始：'+startX);
+      console.log('结束：'+moveX);
+      if(!endX){
+        moveX=startX;
+      }
+      if(moveX-startX>20){
+        console.log('向右滑动')
+        if($api.getStorage('page')==2){
+          window.location.href='cheng.html';
+        }
+      }else if(moveX-startX<-20){
+        if($api.getStorage('page')==1){
+          window.location.href='shouhuan.html';
+        }
+        console.log('向左滑动')
+      }
+    });
 </script>
 </html>

@@ -27,7 +27,7 @@
     </div>
     <img class='biaopan' src="../../image/biaopan2_1.png" alt="">
   <p class='sh-bushu'>当前步数</p>
-  <p class='sh-bushuNum'>{{xixi}}</p>
+  <p class='sh-bushuNum'>{{bushu}}</p>
   <p class='sh-bushuPoint'>合格</p>
   <p class='sh-kaul'>目标卡路里</p>
   <p class='sh-kaulnum'>{{kalnum}}千卡</p>
@@ -55,6 +55,36 @@
     </a>
   </div>
 
+  <div class="sh-showdata">
+    <div class="sh-qtbushu">
+      <img src="../../image/bushu.png" alt="">
+      <p class='span1'>全天步数</p>
+      <p class='span1'>-</p>
+    </div>
+    <div class="sh-qtbushu">
+      <img src="../../image/licheng.png" alt="">
+      <p class='span1'>全体里程</p>
+      <p class='span1'>-</p>
+    </div>
+    <div class="sh-qtbushu">
+      <img src="../../image/xiaohao.png" alt="">
+      <p class='span1'>全天消耗</p>
+      <p class='span1'>-</p>
+    </div>
+  </div>
+
+<a href="shouhuanData.html">
+<div class="sh-yundata">
+    <span class='sh-time' >{{firtime}}</span>
+    <span class='sh-title'>{{firsport}}</span>
+    <div class="sh-erc">
+      <span class='sh-two'>{{firbunum}}步</span>
+      <span class='sh-two'>{{firbukm}}公里</span>
+      <span class='sh-two'>{{firbumin}}分钟</span>
+      <span class='sh-two'>{{firbukal}}千卡</span>
+    </div>
+</div>
+</a>
   <div class="bottom">
     <div class="change">
         <img src="../../image/jiance.png" alt="">
@@ -92,19 +122,31 @@
 var app = new Vue({
   el:'.bodywrap',
   data:{
-    bushunum:"1233",
-    kalnum:123
+    // 步数，字符串
+    bushunum:1222,
+    // 目标卡路里
+    kalnum:123,
+    // 首页时间段
+    firtime:'8:00am - 9:00am',
+    // 运动状态
+    firsport:'轻微运动',
+    firbunum:1333,
+    firbukm:1333,
+    firbumin:1333,
+    firbukal:1333
+
   },
   computed:{
-    xixi:function(){
+    bushu:function(){
+      var nums = this.bushunum+'';
       var newstr = '';
-      if(this.bushunum.length>3){
-        console.log(1);
-        for(var i=0;i<this.bushunum.length;i++){
-          if(i==this.bushunum.length-3){
+      if(nums.length>3){
+        console.log(nums.length);
+        for(var i=0;i<nums.length;i++){
+          if(i==nums.length-3){
             newstr+=','
           }
-          newstr = newstr+this.bushunum[i];
+          newstr = newstr+nums[i];
         }
       }
       return newstr;
@@ -136,6 +178,39 @@ ccc('.bodywrap').onclick = function(event){
 
 }
 
+// 移动检测
+var startX,moveX,endX;
+ccc('.bodywrap').addEventListener("touchstart", function(e) {
+    console.log(e.touches[0].pageX, e.touches[0].pageY);
+    startX = e.touches[0].pageX;
+    endX=0;
+});
+ccc('.bodywrap').addEventListener("touchmove", function(e) {
+    if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+    moveX = e.touches[0].pageX;
+    endX=1;
+});
+ccc('.bodywrap').addEventListener("touchend", function(e) {
+  console.log('开始：'+startX);
+  console.log('结束：'+moveX);
+  if(!endX){
+    moveX=startX;
+  }
+  if(moveX-startX>20){
+    console.log('向右滑动')
+    if($api.getStorage('page')==2){
+      window.location.href='cheng.html';
+    }
+  }else if(moveX-startX<-20){
+    if($api.getStorage('page')==1){
+      window.location.href='shouhuan.html';
+    }
+    console.log('向左滑动')
+  }
+
+});
+
+
 // 读取本地缓存用户并且渲染
 function userData(){
   if(!$api.getStorage('user')) return;
@@ -153,6 +228,7 @@ var userhtml='';
 // userData();
 console.log($api.getStorage('user'))
       apiready = function(){
+        $api.setStorage('page',2);
         // 计算body高度
         console.log(JSON.stringify($api.getStorage('user')))
           setTimeout(function(){
