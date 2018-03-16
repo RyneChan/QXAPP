@@ -200,8 +200,8 @@ console.log($api.getStorage('user'))
         // var user_W = 0;
         // // 用户电阻
         // var user_R =0;
-        // bodyseach(systemType,user_H,user_sex,user_age);
-          ioschengStart(user_H,user_sex,user_age);
+        bodyseach(user_H,user_sex,user_age);
+          // ioschengStart(user_H,user_sex,user_age);
 
 
 
@@ -255,87 +255,23 @@ console.log($api.getStorage('user'))
 
 
 
-  //   function bodyseach(type,user_H,user_sex,user_age){
-  //     // 检测如果没有用户信息即返回
-  //     if(user_sex<0){
-  //       return;
-  //     }
-  //     console.log('通过检测，性别:'+user_sex)
-  //     console.log('通过检测，身高:'+user_H)
-  //     console.log('通过检测，age:'+user_age)
-  //
-  //     var ble= api.require('ble');
-  //     var uuid = '';
-  //     var uup = '';
-  //     ble.initManager(function(ret) {
-  //     if (ret.state == "poweredOn") {
-  //         setInterval(function() {
-  //           ble.scan(function(ret) {
-  //               if (ret.status) {
-  //                 ble.getPeripheral(function(ret) {
-  //                     if (ret) {
-  //                        var p= ret.peripherals;
-  //                        if(p){
-  //                          for(var i=0;i<p.length;i++){
-  //                            if(p[i].name=='ADV'){
-  //                              console.log(JSON.stringify(p[i]))
-  //                              uuid=p[i].uuid;
-  //                              uup = p[i];
-  //                              var a;
-  //                             //  var manufacturerData = p[i].manufacturerData;
-  //                             var manufacturerData = 'ca200b00000000010dad28d21381e2c8b21e57ac6c';
-  //
-  //                              if(type=='ios'){
-  //                                console.log('已捕获IOS下的adv参数'+manufacturerData)
-  //                                a = manufacturerData;
-  //                              }else{
-  //                                a = manufacturerData.slice(manufacturerData.indexOf("ca")).slice(0,30);
-  //                                console.log(a)
-  //                                console.log('已捕获安卓下的adv参数'+a)
-  //                              }
-  //
-  //                             //  return;
-  //                              var newarr =[];
-  //                              for(var i=0;i<a.split('').length;i=i+2){
-  //                                 newarr.push(a[i]+''+a[i+1])
-  //                              }
-  //                              var jinkg = parseInt(newarr[8],16).toString(2);
-  //                              user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
-  //                              user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
-  //                              console.log(jinkg);
-  //                              console.log(user_W);
-  //                              console.log (user_R);
-  //                              console.log('Axunge'+ Axunge(user_sex,user_age,user_H,user_W,user_R))
-  //                              if(manufacturerData){
-  //                                ble.stopScan();
-  //                                manufacturerData='';
-  //                                a='';
-  //                              }
-  //
-  //                            }
-  //                          }
-  //                        }
-  //
-  //                     }
-  //                   });
-  //                 }
-  //             });
-  //             console.log('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'+new Date+'----'+uuid+'---------')
-  //         },2000)
-  //     }else{
-  //         // 提示蓝牙还没打开
-  //
-  //     }
-  // });
-  //   }
-    function ioschengStart(user_H,user_sex,user_age) {
-      var ble = api.require('ble');
+    function bodyseach(user_H,user_sex,user_age){
+      // 检测如果没有用户信息即返回
+      if(user_sex<0){
+        return;
+      }
+      console.log('通过检测，性别:'+user_sex)
+      console.log('通过检测，身高:'+user_H)
+      console.log('通过检测，age:'+user_age)
+
+      var ble= api.require('ble');
+      var uz = api.require('moduleDemo');
+
       var uuid = '';
+      var uup = '';
       ble.initManager(function(ret) {
       if (ret.state == "poweredOn") {
-        // document.querySelector('.state').innerHTML = '蓝牙已连接'
           setInterval(function() {
-            console.log(JSON.stringify(chengiosdata));
             ble.scan(function(ret) {
                 if (ret.status) {
                   ble.getPeripheral(function(ret) {
@@ -345,9 +281,23 @@ console.log($api.getStorage('user'))
                            for(var i=0;i<p.length;i++){
                              if(p[i].name=='ADV'){
                                uuid=p[i].uuid;
-                               manufacturerData = p[i].manufacturerData;
-
-                               var a = manufacturerData;
+                              var manufacturerData = p[i].manufacturerData;
+                               uup = p[i];
+                               if(!$api.getStorage('jihuostate')){
+                                  var param = {};
+                                  param.appParam = uuid;
+                                  function resultCallback(ret, err) {
+                                    console.log(ret.macresult)
+                                       if(ret.macresult=='已经在激活状态！'){
+                                         $api.setStorage('jihuostate', '2');
+                                       }else if(ret.macresult=='激活成功！'){
+                                         $api.setStorage('jihuostate', '1');
+                                       }
+                                   }
+                                   uz.mactest(param, resultCallback);
+                               }
+                               var a = manufacturerData.slice(manufacturerData.indexOf("ca")).slice(0,30);
+                               console.log(a)
                                var newarr =[];
   		                         for(var i=0;i<a.split('').length;i=i+2){
   			                          newarr.push(a[i]+''+a[i+1])
@@ -355,11 +305,52 @@ console.log($api.getStorage('user'))
                                var jinkg = parseInt(newarr[8],16).toString(2);
                                user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
                                user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
-                                     test2(user_H,user_W,user_sex,user_age,user_R)
+                               console.log(jinkg);
+                               console.log(user_W);
+                               console.log(user_R);
+                               if(user_R){
+                                 bodyData(user_H,user_sex,user_age,user_W,user_R);
+                               }
+                              //  setTimeout(bodyData,2000)
                                if(manufacturerData){
                                  ble.stopScan();
                                  manufacturerData='';
                                }
+                               function bodyData(user_H,user_sex,user_age,user_W,user_R){
+                                 var uz = api.require('moduleDemo');
+                                 var param1 = {
+                                     height: user_H.toString(),
+                                     sex: user_sex.toString(),
+                                     age: user_age.toString(),
+                                     weight: user_W.toString(),
+                                     r: user_R.toString()
+                                 };
+                                 var resultCallback1 = function(ret, err) {
+                                    //  document.getElementById("activity_result").innerHTML = JSON.stringify(ret);
+                                    // console.log(JSON.stringify(ret))
+                                    alert(JSON.stringify(ret))
+                                             if(chengiosdata!=ret&&ret){
+                                               chengiosdata = ret;
+                                               ccc('.tizhong2').innerHTML = user_W;
+                                               ccc('.defen').innerHTML = parseFloat(ret['评分']).toFixed(1);
+                                               ccc('.quzhitizhong2').innerHTML = parseFloat(ret['去脂体重LBM']).toFixed(1);
+                                               ccc('.bmi2').innerHTML = (user_W/(user_H*user_H/10000)).toFixed(1);
+                                               ccc('.tishuifen2').innerHTML = parseFloat(ret['含水百分比TFR']).toFixed(1);
+                                               ccc('.zhifanglv2').innerHTML = parseFloat(ret['脂肪百份比BFR']).toFixed(1);
+                                              //  ccc('.zhifanglv2').innerHTML = ret['脂肪百份比BFR'];
+
+                                             }
+                                 }
+                                 console.log(user_H.toString());
+                                 console.log(user_sex.toString());
+                                 console.log(user_age.toString());
+                                 console.log(user_W.toString());
+                                 console.log(user_R.toString());
+                                 console.log('================')
+
+                                 uz.datainfo(param1, resultCallback1);
+                               }
+
                              }
                            }
                          }
@@ -368,30 +359,80 @@ console.log($api.getStorage('user'))
                     });
                   }
               });
+              console.log('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'+new Date+'----'+uuid+'---------')
           },2000)
       }else{
-        // 蓝牙未连接
+          // 提示蓝牙还没打开
+
       }
   });
-  function test2(h,w,sex,age,r){
-    if(!w&&!r){
-      return;
     }
-      var demo = api.require('moduleDemo');
-      demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
-          //  var msg = "回调信息是2" + JSON.stringify(ret);
-          //  console.log(msg)
-           if(chengiosdata!=ret&&ret){
-             chengiosdata = ret;
-             ccc('.tizhong2').innerHTML = w;
-             ccc('.defen').innerHTML = parseFloat(ret.getTotalScore).toFixed(1);
-             ccc('.quzhitizhong2').innerHTML = parseFloat(ret.getLBM).toFixed(1);
-             ccc('.bmi2').innerHTML = (w/(h*h/10000)).toFixed(1);
-             ccc('.tishuifen2').innerHTML = parseFloat(ret.getTFR).toFixed(1);
-             ccc('.zhifanglv2').innerHTML = parseFloat(ret.getBFR).toFixed(1);
-           }
-      });
-      }
-    }
+
+
+  //   function ioschengStart(user_H,user_sex,user_age) {
+  //     var ble = api.require('ble');
+  //     var uuid = '';
+  //     ble.initManager(function(ret) {
+  //     if (ret.state == "poweredOn") {
+  //       // document.querySelector('.state').innerHTML = '蓝牙已连接'
+  //         setInterval(function() {
+  //           console.log(JSON.stringify(chengiosdata));
+  //           ble.scan(function(ret) {
+  //               if (ret.status) {
+  //                 ble.getPeripheral(function(ret) {
+  //                     if (ret) {
+  //                        var p= ret.peripherals;
+  //                        if(p){
+  //                          for(var i=0;i<p.length;i++){
+  //                            if(p[i].name=='ADV'){
+  //                              uuid=p[i].uuid;
+  //                              manufacturerData = p[i].manufacturerData;
+  //
+  //                              var a = manufacturerData;
+  //                              var newarr =[];
+  // 		                         for(var i=0;i<a.split('').length;i=i+2){
+  // 			                          newarr.push(a[i]+''+a[i+1])
+  // 		                         }
+  //                              var jinkg = parseInt(newarr[8],16).toString(2);
+  //                              user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
+  //                              user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
+  //                                    test2(user_H,user_W,user_sex,user_age,user_R)
+  //                              if(manufacturerData){
+  //                                ble.stopScan();
+  //                                manufacturerData='';
+  //                              }
+  //                            }
+  //                          }
+  //                        }
+  //
+  //                     }
+  //                   });
+  //                 }
+  //             });
+  //         },2000)
+  //     }else{
+  //       // 蓝牙未连接
+  //     }
+  // });
+  // function test2(h,w,sex,age,r){
+  //   if(!w&&!r){
+  //     return;
+  //   }
+  //     var demo = api.require('moduleDemo');
+  //     demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
+  //         //  var msg = "回调信息是2" + JSON.stringify(ret);
+  //         //  console.log(msg)
+  //          if(chengiosdata!=ret&&ret){
+  //            chengiosdata = ret;
+  //            ccc('.tizhong2').innerHTML = w;
+  //            ccc('.defen').innerHTML = parseFloat(ret.getTotalScore).toFixed(1);
+  //            ccc('.quzhitizhong2').innerHTML = parseFloat(ret.getLBM).toFixed(1);
+  //            ccc('.bmi2').innerHTML = (w/(h*h/10000)).toFixed(1);
+  //            ccc('.tishuifen2').innerHTML = parseFloat(ret.getTFR).toFixed(1);
+  //            ccc('.zhifanglv2').innerHTML = parseFloat(ret.getBFR).toFixed(1);
+  //          }
+  //     });
+  //     }
+  //   }
 </script>
 </html>
