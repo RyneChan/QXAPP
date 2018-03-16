@@ -53,12 +53,12 @@
 <script type="text/javascript">
         var sex,birthday;
         ccc('.man').onclick = function(){
-          sex=0;
+          sex=1;
           ccc('.man').style.border ='2px solid #e5eecc'
           ccc('.woman').style.border = '';
         }
         ccc('.woman').onclick = function(){
-          sex=1;
+          sex=0;
           ccc('.woman').style.border ='2px solid #e5eecc'
           ccc('.man').style.border = '';
         }
@@ -122,7 +122,7 @@ var id;
 
 ccc('.sure').onclick = function(){
   var userFirst = {};
-  userFirst.nicename = ccc('.name').value;
+  userFirst.nickname = ccc('.name').value;
   userFirst.sex = sex;
   userFirst.birthday = birthday;
   userFirst.cm =ccc('.n-input1').value;

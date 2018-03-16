@@ -79,25 +79,25 @@
     </div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/c.js"></script>
+
 <script type="text/javascript">
   var user_H = 165;
   var user_sex = 0;
   var user_age = 20;
   var user_W = 0;
   var user_R =0;
-  apiready = function () {
+  var chengiosdata;
+  apiready = ioschengStart;
+  function ioschengStart() {
+
     var ble = api.require('ble');
-    var uz = api.require('moduleDemo');
-
-        // return;
-
     var uuid = '';
-    var uup = '';
     ble.initManager(function(ret) {
     if (ret.state == "poweredOn") {
       document.querySelector('.state').innerHTML = '蓝牙已连接'
-
         setInterval(function() {
+          console.log(1);
           ble.scan(function(ret) {
               if (ret.status) {
                 ble.getPeripheral(function(ret) {
@@ -107,37 +107,17 @@
                          for(var i=0;i<p.length;i++){
                            if(p[i].name=='ADV'){
                              uuid=p[i].uuid;
-                            //  manufacturerData = p[i].manufacturerData;
-                            // manufacturerData = 'ca200b00000000010dad28d21381e2c8b21e57ac6c'
-                            console.log(p[i].manufacturerData)
+                             manufacturerData = p[i].manufacturerData;
 
-                             uup = p[i];
-                             console.log(manufacturerData)
-                             if(!$api.getStorage('jihuostate')){
-                                var param = {};
-                                param.appParam = uuid;
-                                function resultCallback(ret, err) {
-                                     if(ret.macresult=='已经在激活状态！'){
-                                       $api.setStorage('jihuostate', '2');
-                                     }else if(ret.macresult=='激活成功！'){
-                                       $api.setStorage('jihuostate', '1');
-                                     }
-                                 }
-                                 uz.mactest(param, resultCallback);
-                             }
-                             var a = manufacturerData.slice(manufacturerData.indexOf("ca")).slice(0,30);
-                             console.log(a)
+                             var a = manufacturerData;
                              var newarr =[];
 		                         for(var i=0;i<a.split('').length;i=i+2){
 			                          newarr.push(a[i]+''+a[i+1])
 		                         }
                              var jinkg = parseInt(newarr[8],16).toString(2);
                              user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
-                             user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]));
-                             console.log(jinkg);
-                             console.log(user_W);
-                             console.log(user_R);
-                            //  setTimeout(bodyData,2000)
+                             user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
+                                   test2(user_H,user_W,user_sex,user_age,user_R)
                              if(manufacturerData){
                                ble.stopScan();
                                manufacturerData='';
@@ -150,60 +130,26 @@
                   });
                 }
             });
-            // $api.setStorage('keshi', '12312312');
-            console.log($api.getStorage('jihuostate'))
             console.log('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'+new Date+'----'+uuid+'---------')
         },2000)
     }else{
-      document.querySelector('.state').innerHTML = '蓝牙未连接'
+      // 蓝牙未连接
     }
 });
+function test2(h,w,sex,age,r){
+  if(!w&&!r){
+    return;
   }
-  function f16to2(num){
-  		var a = parseInt(num,16).toString(2);
-  		var b = '00000000';
-  		return b.slice(0,(8-a.length))+a
-  	}
-    function f2to10(num1,num2,jinkg){
-  		var a = num1+num2;
-  		var b = parseInt(a,2).toString(10);
-      if(!jinkg){
-        return b;
-      }
-  		var next = b[b.length-2]+b[b.length-1];
-  		var first = b.slice(0,length-2);
-  		if(jinkg<1000){
-  			var ss=+(first*1000+next*10)/1000;
-  		}else{
-  			var ss=+(first*500+next[0]*50)/1000;
-  		}
-  		return ss;
-  	}
-  function bodyData(){
-    var uz = api.require('moduleDemo');
-    if(!user_R){
-      user_R = 1;
-    }
-    var param1 = {
-        height: user_H.toString(),
-        sex: user_sex.toString(),
-        age: user_age.toString(),
-        weight: user_W.toString(),
-        r: user_R.toString()
-    };
-    var resultCallback1 = function(ret, err) {
-        document.getElementById("activity_result").innerHTML = JSON.stringify(ret);
-    }
-    console.log(user_H.toString());
-    console.log(user_sex.toString());
-    console.log(user_age.toString());
-    console.log(user_W.toString());
-    console.log(user_R.toString());
-    console.log('================')
-
-    uz.datainfo(param1, resultCallback1);
+    var demo = api.require('moduleDemo');
+    demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
+        //  var msg = "回调信息是2" + JSON.stringify(ret);
+        //  console.log(msg)
+         if(chengiosdata!=ret&&ret){
+           chengiosdata = ret;
+         }
+    });
+}
   }
-  document.querySelector('button').onclick =bodyData;
 </script>
 
 </html>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+
+	<style>
+  body{
+    background: url(../../image/background.png);
+    width: 100%;
+    height: 568px;
+  }
+  .cheng{
+    width: 100%;    height: 568px;
+    background: url(../../image/bg2.png);
+  }
+  .outdiv{
+    transform: scale(0.2);
+    transition: all 300ms;
+  }
+  .rightin{
+    -webkit-transform:translate(-100%,0);
+    -webkit-transition: all 300ms;
+    -webkit-transition-delay:300ms;
+  }
+  .shouhuan{
+    position: absolute;
+    left: 100%;
+    top:0;
+    width: 100%;    height: 568px;
+    background: url(../../image/bg3.png);
+  }
+	</style>
+</head>
+<body>
+      <div class="cheng">
+      </div>
+      <div class="shouhuan">
+      </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/flexible_css.js"></script>
+<script type="text/javascript" src="../../script/flexible.js"></script>
+<script type="text/javascript" src="../../script/c.js"></script>
+<script type="text/javascript">
+
+var nowpage = 0;
+function clisd(el,ev,fn,bb){
+    document.querySelector(el).addEventListener(ev,fn,bb);
+}
+clisd('.cheng','touchstart',()=>{
+  console.log(1);
+});
+clisd('.cheng','touchend',(e)=>{
+// console.log(e.touches[0].pageX, e.touches[0].pageY);
+  console.log(e);
+  if(nowpage==0){
+    nowpage=1;
+    ccc('.cheng').style.transform ='scale(0.2)';
+    ccc('.cheng').style.transition ='all 300ms';
+  }else{
+    nowpage=0;
+    ccc('.shouhuan').className +='shouhuan outdiv';
+    ccc('.cheng').className +='cheng rightin';
+  }
+
+});
+clisd('.cheng','touchmove',(e)=>{
+  console.log(3);
+
+  // console.log(e,false);
+});
+
+        apiready = ()=>{
+            var Hbody= api.winHeight+'px';
+            ccc('body').style.height = Hbody;
+
+            ccc('.cheng').style.height = Hbody;
+            ccc('.shouhuan').style.height = Hbody;
+
+        };
+</script>
+</html>

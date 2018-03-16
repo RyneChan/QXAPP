@@ -14,6 +14,9 @@
     width: 100%;
     height: 568px;
   }
+  /*#id0{
+    background: red;
+  }*/
 	</style>
 </head>
 <body>
@@ -43,7 +46,7 @@
   <div class="content">
     <div class="lian">
       <div class="zuobar"></div>
-      <span class='bartitle'>千选 QX-B37</span>
+      <span class='bartitle'>请连接设备</span>
       <div class="youbar"></div>
     </div>
     <p class='tizhong'><span class='tizhong2'>0.0</span></p>
@@ -58,22 +61,22 @@
     <div class="quzhi quzhi1">
       <img src="../../image/quzhi.png" alt="">
       <p>去脂体重</p>
-      <p>43.0kg</p>
+      <p><span class="quzhitizhong2"></span>kg</p>
     </div>
     <div class="quzhi bmi">
       <img src="../../image/bmi.png" alt="">
       <p>BMI</p>
-      <p>18.21</p>
+      <p class="bmi2">18.21</p>
     </div>
     <div class="quzhi tishui">
       <img src="../../image/tishui.png" alt="">
       <p>体水分</p>
-      <p>18.8%</p>
+      <p><span class='tishuifen2'></span>%</p>
     </div>
     <div class="quzhi zhifang">
       <img src="../../image/zhifang.png" alt="">
       <p>脂肪率</p>
-      <p>2.3%</p>
+      <p><span class='zhifanglv2'></span>%</p>
     </div>
   </div>
   <div class="bottom">
@@ -109,6 +112,10 @@
 
 
 <script type="text/javascript">
+var nowuser = {
+  "nicename":"请先添加用户","sex":-1,"birthday":[],"cm":""
+}
+var chengiosdata;
 var open = 0;
 // 打开
 ccc('.user').onclick = function(){
@@ -154,58 +161,237 @@ function userData(){
 var userhtml='';
     for(var key in userdata){
       console.log(key)
-      userhtml +=`<div class="userwrap">
-          <div class="touxiang">${userdata[key].nicename[0]}</div>
-          <p>${userdata[key].nicename}</p>
+      userhtml +=`<div class="userwrap" id=${'id'+key}>
+          <div class="touxiang">${userdata[key].nickname[0]}</div>
+          <p>${userdata[key].nickname}</p>
       </div>`
     }
     ccc('.bigwrap').innerHTML = userhtml;
 }
-// userData();
 console.log($api.getStorage('user'))
+
+// 检测
+// 数据
+
+
+// 需要6个数据，1体重，2得分，3去脂体重，4BMI,5体水分，6脂肪率
+
       apiready = function(){
+        var systemType = api.systemType;
+        console.log(systemType)
+
         $api.setStorage('page',1);
 
         // 计算body高度
         console.log(JSON.stringify($api.getStorage('user')))
-          setTimeout(function(){
-            ccc('.users').style.opacity = 1;
-          },500)
-          document.querySelector('body').style.height = api.winHeight-1+'px';
-          userData();
+        setTimeout(function(){ccc('.users').style.opacity = 1;},500)
+        document.querySelector('body').style.height = api.winHeight+'px';
+        userData();
+
+
+        var d = new Date();
+        // 身高
+        var user_H = nowuser.cm;
+        // 性别，0为女，1为男，-1为未定义用户
+        var user_sex = nowuser.sex;
+        // 用户年龄
+        var user_age = (d.getFullYear() - +nowuser.birthday[0]);
+        // // 用户体重
+        // var user_W = 0;
+        // // 用户电阻
+        // var user_R =0;
+        // bodyseach(systemType,user_H,user_sex,user_age);
+          ioschengStart(user_H,user_sex,user_age);
+
+
 
 
     };
 
-    // 移动检测
-    var startX,moveX,endX;
-    ccc('.bodywrap').addEventListener("touchstart", function(e) {
-        console.log(e.touches[0].pageX, e.touches[0].pageY);
-        startX = e.touches[0].pageX;
-        endX=0;
-    });
-    ccc('.bodywrap').addEventListener("touchmove", function(e) {
-        if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
-        moveX = e.touches[0].pageX;
-        endX=1;
-    });
-    ccc('.bodywrap').addEventListener("touchend", function(e) {
-      console.log('开始：'+startX);
-      console.log('结束：'+moveX);
-      if(!endX){
-        moveX=startX;
+    // 默认登录选择第一个
+    if($api.getStorage('user')){
+      $api.setStorage('nowuser',Json2Str($api.getStorage('user')[0]))
+        nowuser = $api.getStorage('user')[0];
+        ccc('.head-title').innerHTML = nowuser.nickname;
+    }else {
+        ccc('.head-title').innerHTML = nowuser.nickname;
+    }
+
+
+
+    // // 移动检测
+    // var startX,moveX,endX;
+    // ccc('.bodywrap').addEventListener("touchstart", function(e) {
+    //     console.log(e.touches[0].pageX, e.touches[0].pageY);
+    //     startX = e.touches[0].pageX;
+    //     endX=0;
+    // });
+    // ccc('.bodywrap').addEventListener("touchmove", function(e) {
+    //     if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+    //     moveX = e.touches[0].pageX;
+    //     endX=1;
+    // });
+    // ccc('.bodywrap').addEventListener("touchend", function(e) {
+    //   console.log('开始：'+startX);
+    //   console.log('结束：'+moveX);
+    //   if(!endX){
+    //     moveX=startX;
+    //   }
+    //   if(moveX-startX>20){
+    //     console.log('向右滑动')
+    //     if($api.getStorage('page')==2){
+    //       window.location.href='cheng.html';
+    //     }
+    //   }else if(moveX-startX<-20){
+    //     if($api.getStorage('page')==1){
+    //       window.location.href='shouhuan.html';
+    //     }
+    //     console.log('向左滑动')
+    //   }
+    // });
+
+
+
+
+
+
+  //   function bodyseach(type,user_H,user_sex,user_age){
+  //     // 检测如果没有用户信息即返回
+  //     if(user_sex<0){
+  //       return;
+  //     }
+  //     console.log('通过检测，性别:'+user_sex)
+  //     console.log('通过检测，身高:'+user_H)
+  //     console.log('通过检测，age:'+user_age)
+  //
+  //     var ble= api.require('ble');
+  //     var uuid = '';
+  //     var uup = '';
+  //     ble.initManager(function(ret) {
+  //     if (ret.state == "poweredOn") {
+  //         setInterval(function() {
+  //           ble.scan(function(ret) {
+  //               if (ret.status) {
+  //                 ble.getPeripheral(function(ret) {
+  //                     if (ret) {
+  //                        var p= ret.peripherals;
+  //                        if(p){
+  //                          for(var i=0;i<p.length;i++){
+  //                            if(p[i].name=='ADV'){
+  //                              console.log(JSON.stringify(p[i]))
+  //                              uuid=p[i].uuid;
+  //                              uup = p[i];
+  //                              var a;
+  //                             //  var manufacturerData = p[i].manufacturerData;
+  //                             var manufacturerData = 'ca200b00000000010dad28d21381e2c8b21e57ac6c';
+  //
+  //                              if(type=='ios'){
+  //                                console.log('已捕获IOS下的adv参数'+manufacturerData)
+  //                                a = manufacturerData;
+  //                              }else{
+  //                                a = manufacturerData.slice(manufacturerData.indexOf("ca")).slice(0,30);
+  //                                console.log(a)
+  //                                console.log('已捕获安卓下的adv参数'+a)
+  //                              }
+  //
+  //                             //  return;
+  //                              var newarr =[];
+  //                              for(var i=0;i<a.split('').length;i=i+2){
+  //                                 newarr.push(a[i]+''+a[i+1])
+  //                              }
+  //                              var jinkg = parseInt(newarr[8],16).toString(2);
+  //                              user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
+  //                              user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
+  //                              console.log(jinkg);
+  //                              console.log(user_W);
+  //                              console.log (user_R);
+  //                              console.log('Axunge'+ Axunge(user_sex,user_age,user_H,user_W,user_R))
+  //                              if(manufacturerData){
+  //                                ble.stopScan();
+  //                                manufacturerData='';
+  //                                a='';
+  //                              }
+  //
+  //                            }
+  //                          }
+  //                        }
+  //
+  //                     }
+  //                   });
+  //                 }
+  //             });
+  //             console.log('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'+new Date+'----'+uuid+'---------')
+  //         },2000)
+  //     }else{
+  //         // 提示蓝牙还没打开
+  //
+  //     }
+  // });
+  //   }
+    function ioschengStart(user_H,user_sex,user_age) {
+      var ble = api.require('ble');
+      var uuid = '';
+      ble.initManager(function(ret) {
+      if (ret.state == "poweredOn") {
+        // document.querySelector('.state').innerHTML = '蓝牙已连接'
+          setInterval(function() {
+            console.log(JSON.stringify(chengiosdata));
+            ble.scan(function(ret) {
+                if (ret.status) {
+                  ble.getPeripheral(function(ret) {
+                      if (ret) {
+                         var p= ret.peripherals;
+                         if(p){
+                           for(var i=0;i<p.length;i++){
+                             if(p[i].name=='ADV'){
+                               uuid=p[i].uuid;
+                               manufacturerData = p[i].manufacturerData;
+
+                               var a = manufacturerData;
+                               var newarr =[];
+  		                         for(var i=0;i<a.split('').length;i=i+2){
+  			                          newarr.push(a[i]+''+a[i+1])
+  		                         }
+                               var jinkg = parseInt(newarr[8],16).toString(2);
+                               user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
+                               user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
+                                     test2(user_H,user_W,user_sex,user_age,user_R)
+                               if(manufacturerData){
+                                 ble.stopScan();
+                                 manufacturerData='';
+                               }
+                             }
+                           }
+                         }
+
+                      }
+                    });
+                  }
+              });
+          },2000)
+      }else{
+        // 蓝牙未连接
       }
-      if(moveX-startX>20){
-        console.log('向右滑动')
-        if($api.getStorage('page')==2){
-          window.location.href='cheng.html';
-        }
-      }else if(moveX-startX<-20){
-        if($api.getStorage('page')==1){
-          window.location.href='shouhuan.html';
-        }
-        console.log('向左滑动')
+  });
+  function test2(h,w,sex,age,r){
+    if(!w&&!r){
+      return;
+    }
+      var demo = api.require('moduleDemo');
+      demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
+          //  var msg = "回调信息是2" + JSON.stringify(ret);
+          //  console.log(msg)
+           if(chengiosdata!=ret&&ret){
+             chengiosdata = ret;
+             ccc('.tizhong2').innerHTML = w;
+             ccc('.defen').innerHTML = parseFloat(ret.getTotalScore).toFixed(1);
+             ccc('.quzhitizhong2').innerHTML = parseFloat(ret.getLBM).toFixed(1);
+             ccc('.bmi2').innerHTML = (w/(h*h/10000)).toFixed(1);
+             ccc('.tishuifen2').innerHTML = parseFloat(ret.getTFR).toFixed(1);
+             ccc('.zhifanglv2').innerHTML = parseFloat(ret.getBFR).toFixed(1);
+           }
+      });
       }
-    });
+    }
 </script>
 </html>
