@@ -175,8 +175,10 @@ console.log($api.getStorage('user'))
 
 
 // 需要6个数据，1体重，2得分，3去脂体重，4BMI,5体水分，6脂肪率
+var user_H,user_sex,user_age;
+      apiready =
 
-      apiready = function(){
+      function start(){
         var systemType = api.systemType;
         console.log(systemType)
 
@@ -191,20 +193,20 @@ console.log($api.getStorage('user'))
 
         var d = new Date();
         // 身高
-        var user_H = nowuser.cm;
+         user_H = nowuser.cm;
         // 性别，0为女，1为男，-1为未定义用户
-        var user_sex = nowuser.sex;
+         user_sex = nowuser.sex;
         // 用户年龄
-        var user_age = (d.getFullYear() - +nowuser.birthday[0]);
-        // // 用户体重
-        // var user_W = 0;
-        // // 用户电阻
-        // var user_R =0;
-        bodyseach(user_H,user_sex,user_age);
-          // ioschengStart(user_H,user_sex,user_age);
+         user_age = (d.getFullYear() - +nowuser.birthday[0]);
 
 
-
+        // if(systemType=='ios'){
+        //   ioschengStart(user_H,user_sex,user_age);
+        //
+        // }else{
+        //   bodyseach(user_H,user_sex,user_age);
+        //
+        // }
 
     };
 
@@ -328,7 +330,7 @@ console.log($api.getStorage('user'))
                                  var resultCallback1 = function(ret, err) {
                                     //  document.getElementById("activity_result").innerHTML = JSON.stringify(ret);
                                     // console.log(JSON.stringify(ret))
-                                    alert(JSON.stringify(ret))
+                                    // alert(JSON.stringify(ret))
                                              if(chengiosdata!=ret&&ret){
                                                chengiosdata = ret;
                                                ccc('.tizhong2').innerHTML = user_W;
@@ -337,8 +339,6 @@ console.log($api.getStorage('user'))
                                                ccc('.bmi2').innerHTML = (user_W/(user_H*user_H/10000)).toFixed(1);
                                                ccc('.tishuifen2').innerHTML = parseFloat(ret['含水百分比TFR']).toFixed(1);
                                                ccc('.zhifanglv2').innerHTML = parseFloat(ret['脂肪百份比BFR']).toFixed(1);
-                                              //  ccc('.zhifanglv2').innerHTML = ret['脂肪百份比BFR'];
-
                                              }
                                  }
                                  console.log(user_H.toString());
@@ -363,76 +363,76 @@ console.log($api.getStorage('user'))
           },2000)
       }else{
           // 提示蓝牙还没打开
-
+          console.log('蓝牙没打开')
       }
   });
     }
 
 
-  //   function ioschengStart(user_H,user_sex,user_age) {
-  //     var ble = api.require('ble');
-  //     var uuid = '';
-  //     ble.initManager(function(ret) {
-  //     if (ret.state == "poweredOn") {
-  //       // document.querySelector('.state').innerHTML = '蓝牙已连接'
-  //         setInterval(function() {
-  //           console.log(JSON.stringify(chengiosdata));
-  //           ble.scan(function(ret) {
-  //               if (ret.status) {
-  //                 ble.getPeripheral(function(ret) {
-  //                     if (ret) {
-  //                        var p= ret.peripherals;
-  //                        if(p){
-  //                          for(var i=0;i<p.length;i++){
-  //                            if(p[i].name=='ADV'){
-  //                              uuid=p[i].uuid;
-  //                              manufacturerData = p[i].manufacturerData;
-  //
-  //                              var a = manufacturerData;
-  //                              var newarr =[];
-  // 		                         for(var i=0;i<a.split('').length;i=i+2){
-  // 			                          newarr.push(a[i]+''+a[i+1])
-  // 		                         }
-  //                              var jinkg = parseInt(newarr[8],16).toString(2);
-  //                              user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
-  //                              user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
-  //                                    test2(user_H,user_W,user_sex,user_age,user_R)
-  //                              if(manufacturerData){
-  //                                ble.stopScan();
-  //                                manufacturerData='';
-  //                              }
-  //                            }
-  //                          }
-  //                        }
-  //
-  //                     }
-  //                   });
-  //                 }
-  //             });
-  //         },2000)
-  //     }else{
-  //       // 蓝牙未连接
-  //     }
-  // });
-  // function test2(h,w,sex,age,r){
-  //   if(!w&&!r){
-  //     return;
-  //   }
-  //     var demo = api.require('moduleDemo');
-  //     demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
-  //         //  var msg = "回调信息是2" + JSON.stringify(ret);
-  //         //  console.log(msg)
-  //          if(chengiosdata!=ret&&ret){
-  //            chengiosdata = ret;
-  //            ccc('.tizhong2').innerHTML = w;
-  //            ccc('.defen').innerHTML = parseFloat(ret.getTotalScore).toFixed(1);
-  //            ccc('.quzhitizhong2').innerHTML = parseFloat(ret.getLBM).toFixed(1);
-  //            ccc('.bmi2').innerHTML = (w/(h*h/10000)).toFixed(1);
-  //            ccc('.tishuifen2').innerHTML = parseFloat(ret.getTFR).toFixed(1);
-  //            ccc('.zhifanglv2').innerHTML = parseFloat(ret.getBFR).toFixed(1);
-  //          }
-  //     });
-  //     }
-  //   }
+    function ioschengStart(user_H,user_sex,user_age) {
+      var ble = api.require('ble');
+      var uuid = '';
+      ble.initManager(function(ret) {
+      if (ret.state == "poweredOn") {
+        // document.querySelector('.state').innerHTML = '蓝牙已连接'
+          setInterval(function() {
+            console.log(JSON.stringify(chengiosdata));
+            ble.scan(function(ret) {
+                if (ret.status) {
+                  ble.getPeripheral(function(ret) {
+                      if (ret) {
+                         var p= ret.peripherals;
+                         if(p){
+                           for(var i=0;i<p.length;i++){
+                             if(p[i].name=='ADV'){
+                               uuid=p[i].uuid;
+                               manufacturerData = p[i].manufacturerData;
+
+                               var a = manufacturerData;
+                               var newarr =[];
+  		                         for(var i=0;i<a.split('').length;i=i+2){
+  			                          newarr.push(a[i]+''+a[i+1])
+  		                         }
+                               var jinkg = parseInt(newarr[8],16).toString(2);
+                               user_W  =f2to10(f16to2(newarr[10]),f16to2(newarr[11]),jinkg);
+                               user_R = f2to10(f16to2(newarr[12]),f16to2(newarr[13]))/100;
+                                     test2(user_H,user_W,user_sex,user_age,user_R)
+                               if(manufacturerData){
+                                 ble.stopScan();
+                                 manufacturerData='';
+                               }
+                             }
+                           }
+                         }
+
+                      }
+                    });
+                  }
+              });
+          },2000)
+      }else{
+        // 蓝牙未连接
+      }
+  });
+  function test2(h,w,sex,age,r){
+    if(!w&&!r){
+      return;
+    }
+      var demo = api.require('moduleDemo');
+      demo.sdkinfo_ios({height: h,weight:w,sex:sex,age:age,r:r,year:'2018'},function(ret, err){
+          //  var msg = "回调信息是2" + JSON.stringify(ret);
+          //  console.log(msg)
+           if(chengiosdata!=ret&&ret){
+             chengiosdata = ret;
+             ccc('.tizhong2').innerHTML = w;
+             ccc('.defen').innerHTML = parseFloat(ret.getTotalScore).toFixed(1);
+             ccc('.quzhitizhong2').innerHTML = parseFloat(ret.getLBM).toFixed(1);
+             ccc('.bmi2').innerHTML = (w/(h*h/10000)).toFixed(1);
+             ccc('.tishuifen2').innerHTML = parseFloat(ret.getTFR).toFixed(1);
+             ccc('.zhifanglv2').innerHTML = parseFloat(ret.getBFR).toFixed(1);
+           }
+      });
+      }
+    }
 </script>
 </html>

@@ -154,6 +154,26 @@ ble.isConnected({
     }
 
 function astart(){
+  var activity = api.require('UILoading');
+activity.keyFrame({
+    rect: {
+        w: 100,
+        h: 100
+    },
+    mask:'rgba(0,0,0,0.5)',
+    styles: {
+        bg: 'rgba(0,0,0,0.5)',
+        corner: 5,
+        interval: 35,
+        frame: {
+            w: 80,
+            h: 80
+        }
+    },
+    content:'123'
+}, function(ret) {
+    alert(JSON.stringify(ret));
+});
   var obj = api.require('btmodule');
 // obj.CloseBT();
   // var simpleBle = api.require("simpleBle");
@@ -169,6 +189,10 @@ function astart(){
   //     }
   //   })
   // },1000)
+  setTimeout(()=>{
+    var uiloading = api.require('UILoading');
+    uiloading.closeKeyFrame();
+  },5000)
 }
 
 
@@ -233,7 +257,6 @@ function astart(){
               });
             },1000)
       }else{
-
         console.log('蓝牙尚未启动')
       }
     });
@@ -252,7 +275,6 @@ function astart(){
     var param1={service:"0000"+seruuid+"-0000-1000-8000-00805f9b34fb",charUUID:"0000"+cruuid+"-0000-1000-8000-00805f9b34fb",enable:true,way:"notify"};
     obj.NotifyBT(param1);
     document.querySelector('.xie').innerHTML = '写入数据：'+str;
-
   }
 
 
@@ -272,37 +294,7 @@ function astart(){
   }
   // 上传到云
 
-  function dao520(ble) {
 
-    var ble = api.require('ble');
-    // console.log(ble)
-    var cishu=0;
-    var timerdaoshu = setInterval(function() {
-      var settime = ['52 05 05 05 05 05','52 04 04 04 04 04','52 03 03 03 03 03','52 02 02 02 02 02','52 01 01 01 01 01','52 05 20 05 20 20',];
-      var str = '01 '+settime[cishu]+' 00 00 00 00 00 00 00 00';
-      var newar = str.split(' ');
-      var a=0;
-      newar.forEach(function(item,index) {
-          a+=parseInt(item,16);
-      })
-      var crc = completionZero(parseInt(+a.toString(2),2).toString(16));
-      ble.writeValueForCharacteristic({
-          peripheralUUID: uuid,
-          serviceUUID: serviceUUID,
-          characteristicUUID: "FFF6",
-          value: str+' '+crc
-      }, function(ret) {
-          if (ret) {
-          console.error(JSON.stringify(ret))
-          }
-      });
-      cishu++;
-      if(cishu==6){
-        offf=0;
-        clearInterval(timerdaoshu)
-      }
-    },1000)
-  }
   // crc计算返回
   function crcSet(str) {
     var newar = str.split(' ');
