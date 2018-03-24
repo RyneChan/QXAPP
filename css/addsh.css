@@ -3,10 +3,11 @@
 	height: 1.333333rem;
 	position: absolute;
 	right: 0.266667rem;
-	top:0.133333rem;
+	top:0.233333rem;
 	text-align: center;
 	line-height: 1.8rem;
 	color: white;
+	/*font-size: 0.366667rem;*/
 }
 .addshp1{
 	width: 100%;
@@ -58,4 +59,41 @@
 	border-radius: 0.133333rem;
 	text-align: center;
 	line-height: 1.3066rem;
+}
+.quxiaobd{
+	display: none;
+	width: 5.333333rem;
+	height: 1.306667rem;
+	position: relative;
+	margin:0 auto;
+	top:3.8rem;
+	font-size: 0.48rem;
+	color: white;
+	background: #5088D8;
+	border-radius: 0.133333rem;
+	text-align: center;
+	line-height: 1.3066rem;
+}
+.quxiaobd1{
+	display: block;
+	width: 5.333333rem;
+	height: 1.306667rem;
+	position: relative;
+	margin:0 auto;
+	top:5.8rem;
+	font-size: 0.48rem;
+	color: white;
+	background: #5088D8;
+	border-radius: 0.133333rem;
+	text-align: center;
+	line-height: 1.3066rem;
+}
+.tips{
+	display:none;
+	width:100%;
+	position: relative;
+	text-align: center;
+	top:4.2rem;
+	font-size: 0.48rem;
+	color: black;
 }

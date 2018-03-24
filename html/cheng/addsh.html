@@ -15,14 +15,17 @@
     width: 100%;
     height: 568px;
   }
+  .shouhuanname{
+    display: none;
+  }
 	</style>
 </head>
 <body>
   <div class="head"  style='background:#2F3747;'>
     <p class='head-title'>绑定设备</p>
-    <div class="headok">
+    <a href="shouhuan.html" class="headok">
       完成
-    </div>
+    </a>
   </div>
 <p class="addshp1">确保您的设备在身边，处于打开的状态并有电量</p>
 <p class="addshp2">点击扫描按键进行设备的绑定</p>
@@ -30,6 +33,10 @@
 <p class='bangdingstate'>未绑定</p>
 <p class='shouhuanname'>设备名称：TalkBand B2</p>
 <div class="saomiao">扫描</div>
+<div class="quxiaobd">解除绑定</div>
+<div class="quxiaobd1">解除绑定111</div>
+
+<div class="tips">连接中...</div>
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript" src="../../script/flexible_css.js"></script>
@@ -40,17 +47,132 @@ var seruuid = 'fff0';  //协议的serviceUUID
 var cwuuid = 'fff6';  //协议中写入的uuid
 var cruuid = 'fff7';  //协议中读取的uuid
 var offf = 0;
-$api.addEvt(ccc('.saomiao'), 'click', function(){
+var uuid,serviceUUID,characteristicUUID;
+$api.addEvt(ccc('.saomiao'), 'click', start);
+apiready = ()=>{
+  var obj = api.require('btmodule');
+  obj.CloseBT();
+  setTimeout(function(){
+    obj.OpenBT();
+
+  },100)
+document.querySelector('body').style.height = api.winHeight+'px';
+}
+function start() {
+  $api.rmStorage('shouhuan');
+  document.querySelector('.tips').style.display = 'block';
+
+  var obj = api.require('btmodule');
+  console.log('已启动')
+  var ble = api.require('ble');
+  ble.initManager(function(ret) {
+    if (ret.state == "poweredOn") {
+            ble.scan({
+            }, function(ret) {
+            if (ret.status) {
+                console.log('开始扫描');
+            }
+          });
+          var timer = setInterval(function(){
+            ble.getPeripheral(function(ret) {
+                if (ret) {
+                    console.log(JSON.stringify(ret))
+                    var p= ret.peripherals;
+                    if(p){
+                      for(var i=0;i<p.length;i++){
+                        if(p[i].name=='Jstyle heart++'){ //MI Band 2
+                          uuid=p[i].uuid;
+                          uup = p[i];
+                          if(uuid){
+                            console.log('已捕获uuid：'+uuid)
+                            clearInterval(timer);
+                            var obj = api.require('btmodule');
+                          // obj.ScanBT();
+                      var param = { address: uuid };
+                      obj.ConnectBT(param);
+                      obj.getState(function(ret, err) {
+  console.log(JSON.stringify(ret));
+  if(ret.state.ifbtconnect=='false'){
+    start();
+  }
+});
+                      document.querySelector('.bangdingstate').innerHTML = '绑定成功';
+                      document.querySelector('.shouhuanname').innerHTML = '设备名称：Jstyle heart++';
+                      document.querySelector('.shouhuanname').style.display = 'block';
+                      document.querySelector('.quxiaobd').style.display = 'block';
+                      document.querySelector('.saomiao').style.display = 'none';
+                      document.querySelector('.tips').style.display = 'none';
+                      $api.setStorage('shouhuan','Jstyle heart++');
+                          }
+                        }
+                      }
+                    }
+                }
+            });
+          },1000)
+    }else{
+      console.log('蓝牙尚未启动')
+      document.querySelector('.tips').innerHTML = '蓝牙尚未启动';
+
+    }
+  });
+}
+function readTheRet(str){
+  var obj = api.require('btmodule');
+obj.startRev(function(ret, err) {
+var redata = ret.received_data.value;
+// document.querySelector('.du').innerHTML = '读取数据：'+redata;
 
 });
-console.log("‘Hello World!’");
+  var param={service:"0000"+seruuid+"-0000-1000-8000-00805f9b34fb",charUUID:"0000"+cwuuid+"-0000-1000-8000-00805f9b34fb",data:str};
+  obj.WriteBT(param);
+  var param1={service:"0000"+seruuid+"-0000-1000-8000-00805f9b34fb",charUUID:"0000"+cruuid+"-0000-1000-8000-00805f9b34fb",enable:true,way:"notify"};
+  obj.NotifyBT(param1);
+  // document.querySelector('.xie').innerHTML = '写入数据：'+str;
+}
 
-console.info("‘Something happened…’");
+ccc('.quxiaobd').onclick = ()=>{
+  $api.rmStorage('shouhuan');
 
-console.warn("‘Something strange happened…’");
+  var obj = api.require('btmodule');
+  obj.CloseBT();
+  setTimeout(function(){
+    obj.OpenBT();
+  },100)
+  document.querySelector('.bangdingstate').innerHTML = '未绑定';
+  // document.querySelector('.shouhuanname').innerHTML = '设备名称：Jstyle heart++';
+  document.querySelector('.shouhuanname').style.display = 'none';
+  document.querySelector('.quxiaobd').style.display = 'none';
+  document.querySelector('.saomiao').style.display = 'block';
+}
+  // 返回的数值进行拆分
+  function retSplit(str){
+		var newstr = '';
+		str.split('').forEach(function(item,index){
+			newstr+=item;
+			if(index%2){
+				newstr+=' '
+			}
+		})
+		return newstr;
+	}
+  function completionZero(num) {
+    return num.length==1?'0'+num:num;
+  }
 
-console.error("‘Something horrible happened…’");
+  // crc计算返回
+  function crcSet(str) {
+    var newar = str.split(' ');
+    var a=0;
+    newar.forEach(function(item,index) {
+        a+=parseInt(item,16);
+    })
+    return completionZero(parseInt(+a.toString(2),2).toString(16));
+  }
+  ccc('.quxiaobd1').onclick = ()=>{
+    readTheRet('0152050505050500000000000000006C')
 
+  }
 </script>
 
 

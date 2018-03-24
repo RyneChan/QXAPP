@@ -10,19 +10,55 @@
 
 	<style>
   body{
-    background: url(../../image/bg3.png);
+    /*background: url(../../image/bg3.png);*/
     width: 100%;
     height: 568px;
+  }
+  .bodywrap{
+    background: url(../../image/bg3.png);
+    width: 100%;
+    height:100%;
+    display:none;
   }
 	</style>
 </head>
 <body>
+<div class="addsh-mask">
+    <div class="tips">
+        <p>请先打开蓝牙</p>
+        <div class="sure">确定</div>
+    </div>
+    <div class="btlists">
+        <div class="title">设备名称</div>
+        <img class='img1' src="../../image/cha.png" alt="">
+        <div class="btlistall">
+          <!-- <div class="btlist"><span class='btlistSpan'>TalkBand B2</span><img class='btlistImg' src="../../image/gou.png" alt=""></div> -->
+        </div>
+        <div class="sure">绑定</div>
+    </div>
+</div>
+<div class="addsh">
+    <div class="addsh-head">
+      <div class="left">
+        <img src="../../image/left.png" alt="">
+      </div>
+      <p class='title'>绑定设备</p>
+      <div class="fine">完成</div>
+    </div>
+    <p class="text1">确保您的设备在身边，处于打开的状态并有电量</p>
+    <p class="text2">点击扫描按键进行设备的绑定</p>
+    <img src="../../image/shouhuan.png" alt="" class='img1'>
+    <p class='bdstate'>未绑定</p>
+    <p class='btname'>设备名称：TalkBand B2</p>
+    <div class="saomiao">扫描</div>
+    <div class="jiechubangding">解除绑定</div>
+
+</div>
   <!-- 切换成员 -->
   <div class="bodywrap">
-
     <div class="lian">
       <div class="zuobar"></div>
-      <span class='bartitle'>千选 QX-B37</span>
+      <span class='bartitle'>请连接设备</span>
       <div class="youbar"></div>
     </div>
     <img class='biaopan' src="../../image/biaopan2_1.png" alt="">
@@ -59,17 +95,17 @@
     <div class="sh-qtbushu">
       <img src="../../image/bushu.png" alt="">
       <p class='span1'>全天步数</p>
-      <p class='span1'>-</p>
+      <p class='span1'>{{bushunum}}</p>
     </div>
     <div class="sh-qtbushu">
       <img src="../../image/licheng.png" alt="">
       <p class='span1'>全体里程</p>
-      <p class='span1'>-</p>
+      <p class='span1'>{{kmnum}}</p>
     </div>
     <div class="sh-qtbushu">
       <img src="../../image/xiaohao.png" alt="">
       <p class='span1'>全天消耗</p>
-      <p class='span1'>-</p>
+      <p class='span1'>{{kalnum}}</p>
     </div>
   </div>
 
@@ -126,6 +162,8 @@ var app = new Vue({
     bushunum:1222,
     // 目标卡路里
     kalnum:123,
+    // 今天距离
+    kmnum:0,
     // 首页时间段
     firtime:'8:00am - 9:00am',
     // 运动状态
@@ -148,6 +186,8 @@ var app = new Vue({
           }
           newstr = newstr+nums[i];
         }
+      }else{
+        return nums;
       }
       return newstr;
     }
@@ -190,29 +230,27 @@ ccc('.bodywrap').addEventListener("touchmove", function(e) {
     moveX = e.touches[0].pageX;
     endX=1;
 });
-ccc('.bodywrap').addEventListener("touchend", function(e) {
-  console.log('开始：'+startX);
-  console.log('结束：'+moveX);
-  if(!endX){
-    moveX=startX;
-  }
-  if(moveX-startX>20){
-    console.log('向右滑动')
-    if($api.getStorage('page')==2){
-      window.location.href='cheng.html';
-    }
-  }else if(moveX-startX<-20){
-    if($api.getStorage('page')==1){
-      window.location.href='shouhuan.html';
-    }
-    console.log('向左滑动')
-  }
-});
-
-
+// ccc('.bodywrap').addEventListener("touchend", function(e) {
+//   console.log('开始：'+startX);
+//   console.log('结束：'+moveX);
+//   if(!endX){
+//     moveX=startX;
+//   }
+//   if(moveX-startX>20){
+//     console.log('向右滑动')
+//     if($api.getStorage('page')==2){
+//       window.location.href='cheng.html';
+//     }
+//   }else if(moveX-startX<-20){
+//     if($api.getStorage('page')==1){
+//       window.location.href='shouhuan.html';
+//     }
+//     console.log('向左滑动')
+//   }
+// });
 // 读取本地缓存用户并且渲染
 function userData(){
-  if(!$api.getStorage('user')) return;
+  if($api.getStorage('user')) return;
     var userdata = $api.getStorage('user');
 var userhtml='';
     for(var key in userdata){
@@ -225,9 +263,18 @@ var userhtml='';
     ccc('.bigwrap').innerHTML = userhtml;
 }
 // userData();
+var sType;
 console.log($api.getStorage('user'))
       apiready = function(){
+        sType = api.systemType;
         $api.setStorage('page',2);
+        if(!$api.getStorage('iosuuid')){
+          var ble = api.require('ble');
+ble.disconnect({
+    peripheralUUID: $api.getStorage('iosuuid')
+}, function(ret, err) {
+});
+        }
         // 计算body高度
         console.log(JSON.stringify($api.getStorage('user')))
           setTimeout(function(){
@@ -235,8 +282,186 @@ console.log($api.getStorage('user'))
           },500)
           document.querySelector('body').style.height = api.winHeight-1+'px';
           userData();
-
-
     };
+ccc('.btlists .img1').onclick  =function(){
+      ccc('.addsh-mask').style.display = 'none';
+    }
+    ccc('.addsh-mask .sure').onclick = function(){
+      ccc('.addsh-mask').style.display = 'none';
+      ccc('.addsh-mask .tips').style.display = 'none'
+    }
+
+    //扫描
+    ccc('.saomiao').onclick = function(){
+      if(sType=='ios'){
+        iosSearch();
+      }
+    }
+    var parrtime = 0;
+    var iosuuid;
+    var timer;
+    function iosSearch(){
+        console.log('已启动')
+        var ble = api.require('ble');
+        ble.initManager(function(ret) {
+          if (ret.state == "poweredOn") {
+                  ble.scan({
+                  }, function(ret) {
+                  if (ret.status) {
+                      console.log('开始扫描');
+                  }
+                });
+                 timer = setInterval(function(){
+                  ble.getPeripheral(function(ret) {
+                      if (ret) {
+                        ccc('.addsh-mask').style.display = 'block';
+                        ccc('.addsh-mask .btlists').style.display = 'block'
+                          // console.log(JSON.stringify(ret))
+                          var p= ret.peripherals;
+                          var pArr = [];
+                          for(var i=0;i<p.length;i++){
+                            if(p[i].name){
+                              pArr.push(p[i]);
+                            }
+                          }
+                          var ppin = '';
+                          if(pArr.length>0){
+                            for(var j=0;j<pArr.length;j++){
+                              ppin+=`<div class="btlist"><span data-uuid='${pArr[j]['uuid']}' class='btlistSpan'>${pArr[j]['name']}</span><img class='btlistImg' src="../../image/gou.png" alt=""></div>`
+                            }
+                          }
+                          console.log(JSON.stringify(pArr))
+                          if(parrtime!=pArr.length){
+                            parrtime = pArr.length;
+                            ccc('.btlistall').innerHTML = ppin;
+                            var btlistall = document.querySelectorAll('.btlist');
+                            var btlistImgall = document.querySelectorAll('.btlistImg');
+                            var saomiaoindex = 0;
+                            for(var i =0;i<btlistall.length;i++){
+                              btlistall[i].id = i;
+                              btlistall[i].onclick = function(){
+                                for(var j=0;j<btlistImgall.length;j++){
+                                  btlistImgall[j].style.display = 'none';
+                                }
+                                btlistImgall[this.id].style.display = 'inline-block';
+                                saomiaoindex = +this.id;
+                                iosuuid = pArr[this.id];
+                              }
+                            }
+                          }
+                      }
+                  });
+                },1000)
+          }else{
+            ccc('.addsh-mask').style.display = 'block';
+            ccc('.addsh-mask .tips').style.display = 'block'
+            clearInterval(timer);
+            console.log('蓝牙尚未启动')
+          }
+        });
+    }
+
+    // ios绑定
+    ccc('.btlists .sure').onclick = function(){
+      console.log(iosuuid)
+      var ble = api.require('ble');
+        ble.connect({
+          peripheralUUID: iosuuid['uuid']
+        }, function(ret, err) {
+          if (ret.status) {
+          $api.setStorage('iosuuid',iosuuid['uuid']);
+          alert("连接成功！");
+          clearInterval(timer);
+          ccc('.bdstate').innerHTML = '绑定成功';
+          ccc('.addsh-mask').style.display = 'none';
+          ccc('.addsh-mask .btlists').style.display = 'none'
+          ccc('.bartitle').innerHTML = iosuuid['name'];
+          ccc('.btname').innerHTML ='设备名称：'+ iosuuid['name'];
+          ccc('.btname').style.display = 'block'
+          ccc('.jiechubangding').style.display = 'block'
+          ccc('.saomiao').style.display = 'none'
+        } else {
+          // alert(err.code);
+        }
+        });
+    }
+    // 解除绑定
+ccc('.jiechubangding').onclick = function(){
+      ccc('.saomiao').style.display = 'block'
+      ccc('.jiechubangding').style.display = 'none'
+      ccc('.btname').style.display = 'none'
+      ccc('.bdstate').innerHTML = '未绑定';
+      var ble = api.require('ble');
+      ble.disconnect({
+          peripheralUUID: iosuuid['uuid']
+      }, function(ret, err) {});
+      alert('解除绑定成功')
+}
+// 点击完成屏蔽页面
+
+ccc('.addsh .fine').onclick = iosWrite;
+function iosWrite(str,type) {
+  // var str07 = '07 00 00 00 00 00 00 00 00 00 00 00 00 00 00';
+  var type = 0;
+      var retData = [];
+      var retDataT = 0;
+      var ble = api.require('ble');
+      var uuid = iosuuid['uuid'];
+        str = '07 00 00 00 00 00 00 00 00 00 00 00 00 00 00';
+        var crc = crcSet(str);
+        console.log(crc);
+        ble.discoverService({
+    peripheralUUID:uuid
+}, function(ret) {
+    if (ret) {
+    }
+});
+console.log(uuid)
+ble.discoverCharacteristics({
+    serviceUUID:'FFF0',
+    peripheralUUID: uuid
+}, function(ret) {
+    if (ret) {
+    }
+});
+// ios监听返回数据
+ble.setNotify({
+    peripheralUUID: uuid,
+    serviceUUID: 'FFF0',
+    characteristicUUID: 'FFF7'
+}, function(ret) {
+    if (ret) {
+      if(ret['status']){
+        retDataT++;
+        retData.push(ret['characteristic']['value']);
+        console.log(ret['characteristic']['value']);
+        if(retDataT==2&&type==0){
+          var rertdata07=Data07analyse(retData);
+          console.log(JSON.stringify(Data07analyse(retData)))
+          retDataT=0;
+          ccc('.bodywrap').style.display = 'block';
+          ccc('.addsh').style.display = 'none';
+          app.bushunum = +rertdata07['stepNum'];
+          app.kalnum =  +rertdata07['kal'];
+          app.kmnum =  +rertdata07['km'];
+        }
+      }else{
+        console.error(JSON.stringify(ret))
+      }
+    }
+});
+// ios写入数据
+        ble.writeValueForCharacteristic({
+            peripheralUUID: uuid,
+            serviceUUID: 'FFF0',
+            characteristicUUID: "FFF6",
+            value: str+' '+crc
+            // value: '07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 07'
+        }, function(ret) {
+            if (ret) {
+                console.error(JSON.stringify(ret))
+            }
+        });
+}
 </script>
 </html>

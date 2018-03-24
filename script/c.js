@@ -21,7 +21,7 @@ function f16to2(num){
     var a = parseInt(num,16).toString(2);
     var b = '00000000';
     return b.slice(0,(8-a.length))+a
-  }
+}
   function f2to10(num1,num2,jinkg){
     var a = num1+num2;
     var b = parseInt(a,2).toString(10);
@@ -41,7 +41,6 @@ function f16to2(num){
 
   // 处理ios的uuid
   function iosuuid(str){
-    // var str = 'ca200b00000000010c760000000050c8b21e57ac6c';
     var newstr = str.slice(-12).toUpperCase().split('');
     var newarr = [];
     for(var i=0;i<newstr.length;i++){
@@ -54,11 +53,38 @@ function f16to2(num){
     return newarr.slice(0,-1).join('');
   }
 
+// crc计算返回
+function crcSet(str) {
+  var newar = str.split(' ');
+  var a=0;
+  newar.forEach(function(item,index) {
+      a+=parseInt(item,16);
+  })
+  return completionZero(parseInt(+a.toString(2),2).toString(16));
+}
+// 0补充
+function completionZero(num) {
+  return num.length==1?'0'+num:num;
+}
 
-function Axunge(userSex,userAge,userHeight,userWeight,resis){
-  if(userSex==0){
-    return 43.1912 + 0.0443 * userAge - 0.5008 * userHeight + 0.7042 * userWeight + 0.0449 * resis;
-  }else {
-    return 24.1911 + 0.0463 * userAge - 0.460888 * userHeight + 0.6341581 * userWeight + 0.0566524 * resis;
+function Data07analyse(arr){
+  var str1,str2;
+  for(var i in arr){
+    if(arr[i][arr[i].length-3]=='0'){
+      str2 = arr[i];
+    }else{
+      str1 = arr[i];
+    }
   }
+  var ret = {};
+  var stepNum,kal,km;
+  ret.stepNum = f2to102(f16to2(str1.slice(12,18)));
+  ret.kal = f2to102(f16to2(str1.slice(-8,-2)))/100
+  ret.km = f2to102(f16to2(str2.slice(12,18)))
+  return ret;
+}
+function f2to102(a,jinkg){
+  var a = a;
+  var b = parseInt(a,2).toString(10);
+  return b
 }
